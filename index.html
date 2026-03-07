@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registro Escolar</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Registro escolar</h1>
+      <p class="subtitle">
+        Administra años escolares, materias y alumnos. Toda la información se guarda en tu navegador.
+      </p>
+
+      <section class="panel">
+        <h2>1) Crear año escolar</h2>
+        <form id="year-form" class="grid-form">
+          <label>
+            Nombre del año escolar
+            <input type="text" id="year-name" placeholder="Ej: 2025" required />
+          </label>
+          <button type="submit">Guardar año</button>
+        </form>
+      </section>
+
+      <section class="panel">
+        <h2>2) Registrar materia</h2>
+        <form id="subject-form" class="grid-form">
+          <label>
+            Año escolar
+            <select id="subject-year" required></select>
+          </label>
+          <label>
+            Nombre de la materia
+            <input type="text" id="subject-name" placeholder="Ej: Matemáticas" required />
+          </label>
+          <button type="submit">Guardar materia</button>
+        </form>
+      </section>
+
+      <section class="panel">
+        <h2>3) Registrar alumno</h2>
+        <form id="student-form" class="grid-form">
+          <label>
+            Nombre del alumno
+            <input type="text" id="student-name" placeholder="Ej: María López" required />
+          </label>
+          <label>
+            Año escolar
+            <select id="student-year" required></select>
+          </label>
+          <label>
+            Materia
+            <select id="student-subject" required></select>
+          </label>
+          <button type="submit">Guardar alumno</button>
+        </form>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Página principal: alumnos registrados</h2>
+          <button id="clear-data" class="danger" type="button">Borrar todo</button>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Alumno</th>
+                <th>Año escolar</th>
+                <th>Materia</th>
+              </tr>
+            </thead>
+            <tbody id="students-table-body"></tbody>
+          </table>
+          <p id="empty-state" class="empty">No hay alumnos registrados todavía.</p>
+        </div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
