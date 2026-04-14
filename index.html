@@ -244,11 +244,11 @@
 
       <section class="grid grid-2" style="margin-top:1rem">
         <article class="card">
-          <h2>6) Carga de clases (archivo)</h2>
-          <p class="muted">Formato requerido: clase,creditos,compartida,anio,categoria,tipo</p>
+          <h2>6) Carga de clases (CSV)</h2>
+          <p class="muted">Formato: clase,creditos,compartida,anio,categoria,tipo</p>
           <div class="inline">
-            <input id="fileInput" type="file" accept=".txt,text/plain" />
-            <button id="importFileBtn" type="button">Importar archivo</button>
+            <input id="csvInput" type="file" accept=".csv,text/csv" />
+            <button id="importCsvBtn" type="button">Importar CSV</button>
           </div>
           <div class="table-wrap" style="margin-top:.6rem">
             <table>
@@ -383,8 +383,8 @@
           generateGroupsBtn: document.getElementById("generateGroupsBtn"),
           enrollmentsTbody: document.getElementById("enrollmentsTbody"),
 
-          fileInput: document.getElementById("fileInput"),
-          importFileBtn: document.getElementById("importFileBtn"),
+          csvInput: document.getElementById("csvInput"),
+          importCsvBtn: document.getElementById("importCsvBtn"),
           classesTbody: document.getElementById("classesTbody"),
 
           generateScheduleBtn: document.getElementById("generateScheduleBtn"),
@@ -415,7 +415,7 @@
           el.addRoomBtn.addEventListener("click", addRoom);
           el.saveEnrollmentBtn.addEventListener("click", saveEnrollment);
           el.generateGroupsBtn.addEventListener("click", generateGroupsFromEnrollment);
-          el.importFileBtn.addEventListener("click", importFile);
+          el.importCsvBtn.addEventListener("click", importCsv);
           el.generateScheduleBtn.addEventListener("click", generateSchedule);
           el.clearScheduleBtn.addEventListener("click", () => {
             db.horarioFinal = [];
@@ -567,15 +567,15 @@
           notify(`Grupos generados con capacidad promedio ${capacidadProm}.`, "ok");
         }
 
-        function importFile() {
-          const file = el.fileInput.files?.[0];
-          if (!file) return notify("Selecciona un archivo.", "err");
+        function importCsv() {
+          const file = el.csvInput.files?.[0];
+          if (!file) return notify("Selecciona un CSV.", "err");
 
           const reader = new FileReader();
           reader.onload = () => {
             const text = String(reader.result || "").trim();
-            const rows = parseTextTable(text);
-            if (!rows.length) return notify("Archivo vacío o inválido.", "err");
+            const rows = parseCsv(text);
+            if (!rows.length) return notify("CSV vacío o inválido.", "err");
 
             const normalized = rows.map((r) => ({
               id: uid(),
@@ -958,7 +958,7 @@
           return String(text || "").split(",").map((x) => Number(x.trim())).filter((n) => Number.isFinite(n));
         }
 
-        function parseTextTable(text) {
+        function parseCsv(text) {
           const lines = text.split(/\r?\n/).filter(Boolean);
           if (!lines.length) return [];
           const headers = lines[0].split(",").map((h) => normalize(h));
