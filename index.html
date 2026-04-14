@@ -3,127 +3,259 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Generador de Horarios Universitarios Inteligente</title>
+    <title>Sistema de Generación de Horarios Universitarios</title>
     <style>
       :root {
         --bg: #f4f7fb;
         --card: #ffffff;
-        --text: #172133;
-        --muted: #637189;
-        --primary: #2b65f6;
-        --primary-dark: #184bd1;
-        --danger: #d54848;
-        --ok: #1f9d62;
-        --warn: #d28a0d;
-        --border: #dbe4f1;
+        --line: #dbe5f3;
+        --ink: #132238;
+        --muted: #627089;
+        --primary: #2d64f1;
+        --primary-dark: #1f4dc3;
+        --ok: #1f9d61;
+        --warn: #d18a12;
+        --danger: #cc4747;
       }
-      * { box-sizing: border-box; }
+
+      * {
+        box-sizing: border-box;
+      }
+
       body {
         margin: 0;
-        font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
         background: var(--bg);
-        color: var(--text);
+        color: var(--ink);
+        font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
       }
-      .container { width: min(1300px, 94%); margin: 1.25rem auto 2.5rem; }
-      h1, h2, h3 { margin: 0; }
-      .subtitle { margin: .45rem 0 1.2rem; color: var(--muted); }
-      .grid { display: grid; gap: 1rem; }
-      .grid-2 { grid-template-columns: repeat(2, minmax(0,1fr)); }
-      .grid-3 { grid-template-columns: repeat(3, minmax(0,1fr)); }
+
+      .app {
+        width: min(1400px, 96%);
+        margin: 1rem auto 2rem;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      .subtitle {
+        color: var(--muted);
+        margin-top: 0.45rem;
+      }
+
+      .grid {
+        display: grid;
+        gap: 1rem;
+      }
+
+      .g2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .g3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
       .card {
         background: var(--card);
-        border: 1px solid var(--border);
+        border: 1px solid var(--line);
         border-radius: 12px;
-        padding: .95rem;
-        box-shadow: 0 2px 10px rgba(17,31,57,.06);
+        padding: 0.95rem;
+        box-shadow: 0 2px 10px rgba(15, 33, 61, 0.08);
       }
-      .card h2 { font-size: 1.05rem; margin-bottom: .7rem; }
-      .form-grid { display: grid; gap: .65rem; }
-      label { display: grid; gap: .3rem; font-size: .9rem; font-weight: 600; }
-      input, select, button, textarea {
+
+      .card h2 {
+        font-size: 1.05rem;
+        margin-bottom: 0.65rem;
+      }
+
+      .form {
+        display: grid;
+        gap: 0.6rem;
+      }
+
+      label {
+        display: grid;
+        gap: 0.25rem;
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+
+      input,
+      select,
+      button,
+      textarea {
         font: inherit;
         border-radius: 8px;
       }
-      input, select, textarea {
-        border: 1px solid var(--border);
-        padding: .52rem .66rem;
+
+      input,
+      select,
+      textarea {
+        border: 1px solid var(--line);
         background: #fff;
+        padding: 0.5rem 0.62rem;
       }
-      textarea { min-height: 60px; resize: vertical; }
+
+      textarea {
+        resize: vertical;
+        min-height: 70px;
+      }
+
       button {
         border: none;
         background: var(--primary);
         color: #fff;
-        padding: .58rem .9rem;
+        padding: 0.56rem 0.85rem;
         font-weight: 700;
         cursor: pointer;
       }
-      button:hover { background: var(--primary-dark); }
-      button.secondary { background: #3d7b61; }
-      button.warn { background: var(--warn); }
-      button.danger { background: var(--danger); }
-      .inline { display: flex; gap: .5rem; flex-wrap: wrap; align-items: end; }
-      .chips { display: flex; gap: .45rem; flex-wrap: wrap; margin-top: .45rem; }
+
+      button:hover {
+        background: var(--primary-dark);
+      }
+
+      .btn-secondary {
+        background: #25795d;
+      }
+
+      .btn-warn {
+        background: var(--warn);
+      }
+
+      .btn-danger {
+        background: var(--danger);
+      }
+
+      .inline {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        align-items: end;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.84rem;
+      }
+
+      th,
+      td {
+        border: 1px solid var(--line);
+        padding: 0.4rem 0.5rem;
+        vertical-align: top;
+      }
+
+      th {
+        background: #ecf3ff;
+        text-align: left;
+      }
+
+      .table-wrap {
+        overflow: auto;
+        max-height: 280px;
+      }
+
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+      }
+
       .chip {
-        border: 1px solid var(--border);
-        background: #f7f9fd;
-        border-radius: 999px;
-        padding: .22rem .64rem;
-        font-size: .79rem;
+        border: 1px solid var(--line);
+        background: #f7faff;
+        border-radius: 99px;
+        padding: 0.22rem 0.56rem;
+        font-size: 0.76rem;
       }
+
       .status {
+        margin: 0.8rem 0;
         border-radius: 8px;
-        padding: .55rem .7rem;
+        padding: 0.55rem 0.7rem;
         font-weight: 600;
-        margin: .7rem 0;
       }
-      .status.ok { background: #eaf9f0; color: #0d6d3d; border: 1px solid #b8e9cb; }
-      .status.warn { background: #fff6e4; color: #946108; border: 1px solid #f1d08a; }
-      .status.err { background: #fee9e9; color: #9d1f1f; border: 1px solid #f4b5b5; }
-      table { width: 100%; border-collapse: collapse; font-size: .86rem; }
-      th, td { border: 1px solid var(--border); padding: .42rem .48rem; vertical-align: top; }
-      th { background: #edf3ff; text-align: left; }
-      .table-wrap { overflow: auto; max-height: 300px; }
-      .muted { color: var(--muted); }
-      .schedule-grid { overflow: auto; }
-      .slot-cell { min-width: 170px; min-height: 64px; position: relative; }
+
+      .status.ok {
+        color: #0d6d3d;
+        border: 1px solid #b7e7ca;
+        background: #e9f9f0;
+      }
+
+      .status.warn {
+        color: #8f5f09;
+        border: 1px solid #f2d294;
+        background: #fff7e7;
+      }
+
+      .status.err {
+        color: #9f1f1f;
+        border: 1px solid #f3b4b4;
+        background: #feeaea;
+      }
+
+      .schedule {
+        overflow: auto;
+      }
+
+      .slot {
+        min-width: 170px;
+        min-height: 60px;
+      }
+
       .slot-item {
-        border: 1px solid #c8dafd;
+        border: 1px solid #c9dafd;
         background: #edf4ff;
         border-radius: 8px;
-        padding: .25rem .35rem;
-        margin: .2rem 0;
-        font-size: .78rem;
+        padding: 0.22rem 0.32rem;
+        margin: 0.12rem 0;
+        font-size: 0.75rem;
       }
+
+      .slot-item small {
+        display: block;
+      }
+
       .slot-item button {
-        padding: .2rem .4rem;
-        font-size: .72rem;
-        border-radius: 6px;
-        margin-top: .2rem;
-        background: #687fee;
+        margin-top: 0.2rem;
+        padding: 0.18rem 0.35rem;
+        font-size: 0.7rem;
+        background: #5f79eb;
       }
-      .foot { margin-top: .85rem; font-size: .78rem; color: var(--muted); }
+
+      .muted {
+        color: var(--muted);
+      }
+
       @media (max-width: 980px) {
-        .grid-2, .grid-3 { grid-template-columns: 1fr; }
+        .g2,
+        .g3 {
+          grid-template-columns: 1fr;
+        }
       }
     </style>
   </head>
   <body>
-    <main class="container">
-      <h1>Generador de Horarios Universitarios Inteligente</h1>
-      <p class="subtitle">Sistema académico con generación automática, validaciones de restricciones, edición manual y persistencia local.</p>
+    <main class="app">
+      <h1>Sistema de Generación de Horarios Universitarios</h1>
+      <p class="subtitle">Automatización de horarios académicos sin backend.</p>
 
       <div id="messages"></div>
 
-      <section class="grid grid-2">
+      <section class="grid g2" style="margin-top: 0.9rem">
         <article class="card">
           <h2>1) Configuración académica</h2>
-          <div class="form-grid grid-3">
+          <div class="form g3">
             <label>Coordinación
-              <input id="coordName" placeholder="Ej: Facultad Ingeniería" />
+              <input id="coordName" placeholder="Facultad de Ingeniería" />
             </label>
             <label>Código carrera
-              <input id="careerCode" placeholder="SIS" maxlength="5" />
+              <input id="careerCode" maxlength="6" placeholder="SIS" />
             </label>
             <label>Nombre carrera
               <input id="careerName" placeholder="Ingeniería de Sistemas" />
@@ -135,28 +267,28 @@
               <input id="yearsRange" value="1,2,3,4,5" />
             </label>
           </div>
-          <div class="inline" style="margin-top:.6rem">
-            <button id="saveAcademicBtn" type="button">Guardar configuración académica</button>
+          <div class="inline" style="margin-top: 0.55rem">
+            <button id="saveAcademicBtn" type="button">Guardar configuración</button>
           </div>
-          <div class="chips" id="academicChips"></div>
+          <div class="chips" id="academicChips" style="margin-top: 0.6rem"></div>
         </article>
 
         <article class="card">
           <h2>2) Configuración de turnos</h2>
-          <div class="form-grid grid-3">
+          <div class="form g3">
             <label>Nombre turno
               <input id="shiftName" value="Diurno" />
             </label>
-            <label>Días (separados por coma)
+            <label>Días (coma)
               <input id="shiftDays" value="Lunes,Martes,Miércoles,Jueves,Viernes" />
             </label>
             <label>Bloques por día
               <input id="blocksPerDay" type="number" min="1" value="10" />
             </label>
-            <label>Duración por bloque (min)
+            <label>Duración bloque (min)
               <input id="blockDuration" type="number" min="30" value="45" />
             </label>
-            <label>Recesos (bloques: ej 3,7)
+            <label>Recesos (bloques)
               <input id="breakBlocks" value="3" />
             </label>
             <label>Almuerzo inicio-longitud
@@ -166,37 +298,37 @@
               <input id="maxClassesPerDay" type="number" min="1" value="4" />
             </label>
           </div>
-          <div class="inline" style="margin-top:.6rem">
+          <div class="inline" style="margin-top: 0.55rem">
             <button id="saveShiftBtn" type="button">Guardar turno</button>
           </div>
         </article>
       </section>
 
-      <section class="grid grid-3" style="margin-top:1rem">
+      <section class="grid g3" style="margin-top: 1rem">
         <article class="card">
-          <h2>3) Recursos - Docentes</h2>
-          <div class="form-grid">
+          <h2>3) Docentes</h2>
+          <div class="form">
             <label>Nombre
-              <input id="teacherName" placeholder="Nombre docente" />
+              <input id="teacherName" placeholder="Nombre completo" />
             </label>
             <label>Áreas (coma)
-              <input id="teacherAreas" placeholder="matemática,programación" />
+              <input id="teacherAreas" placeholder="matemática, programación" />
             </label>
             <button id="addTeacherBtn" type="button">Agregar docente</button>
           </div>
-          <div class="table-wrap" style="margin-top:.6rem">
+          <div class="table-wrap" style="margin-top: 0.6rem">
             <table>
-              <thead><tr><th>Docente</th><th>Áreas</th><th></th></tr></thead>
+              <thead><tr><th>Nombre</th><th>Áreas</th><th></th></tr></thead>
               <tbody id="teachersTbody"></tbody>
             </table>
           </div>
         </article>
 
         <article class="card">
-          <h2>4) Recursos - Aulas</h2>
-          <div class="form-grid">
+          <h2>4) Aulas</h2>
+          <div class="form">
             <label>Nombre
-              <input id="roomName" placeholder="Aula A101" />
+              <input id="roomName" placeholder="A101" />
             </label>
             <label>Tipo
               <select id="roomType">
@@ -210,17 +342,17 @@
             </label>
             <button id="addRoomBtn" type="button">Agregar aula</button>
           </div>
-          <div class="table-wrap" style="margin-top:.6rem">
+          <div class="table-wrap" style="margin-top: 0.6rem">
             <table>
-              <thead><tr><th>Aula</th><th>Tipo</th><th>Cap.</th><th></th></tr></thead>
+              <thead><tr><th>Nombre</th><th>Tipo</th><th>Capacidad</th><th></th></tr></thead>
               <tbody id="roomsTbody"></tbody>
             </table>
           </div>
         </article>
 
         <article class="card">
-          <h2>5) Matrícula y grupos automáticos</h2>
-          <div class="form-grid">
+          <h2>5) Matrícula y grupos</h2>
+          <div class="form">
             <label>Carrera
               <select id="enrollCareer"></select>
             </label>
@@ -231,792 +363,870 @@
               <input id="enrollStudents" type="number" min="1" value="120" />
             </label>
             <button id="saveEnrollmentBtn" type="button">Guardar matrícula</button>
-            <button id="generateGroupsBtn" type="button" class="secondary">Generar grupos automáticos</button>
+            <button id="generateGroupsBtn" type="button" class="btn-secondary">Generar grupos automáticos</button>
           </div>
-          <div class="table-wrap" style="margin-top:.6rem">
+          <div class="table-wrap" style="margin-top: 0.6rem">
             <table>
               <thead><tr><th>Carrera</th><th>Año</th><th>Estudiantes</th></tr></thead>
               <tbody id="enrollmentsTbody"></tbody>
             </table>
           </div>
+          <div class="table-wrap" style="margin-top: 0.6rem">
+            <table>
+              <thead><tr><th>Grupo</th><th>Carrera</th><th>Año</th><th>Tamaño</th></tr></thead>
+              <tbody id="groupsTbody"></tbody>
+            </table>
+          </div>
         </article>
       </section>
 
-      <section class="grid grid-2" style="margin-top:1rem">
+      <section class="grid g2" style="margin-top: 1rem">
         <article class="card">
-          <h2>6) Carga de clases (CSV)</h2>
-          <p class="muted">Formato: clase,creditos,compartida,anio,categoria,tipo</p>
-          <div class="inline">
-            <input id="csvInput" type="file" accept=".csv,text/csv" />
-            <button id="importCsvBtn" type="button">Importar CSV</button>
+          <h2>6) Carga de clases CSV</h2>
+          <div class="form">
+            <label>CSV (clase,creditos,compartida,anio,categoria,tipo)
+              <textarea id="csvInput" placeholder="Programación I,4,no,1,troncal,laboratorio"></textarea>
+            </label>
+            <div class="inline">
+              <input id="csvFile" type="file" accept=".csv,text/csv" />
+              <button id="loadCsvBtn" type="button">Importar CSV</button>
+            </div>
           </div>
-          <div class="table-wrap" style="margin-top:.6rem">
+          <div class="table-wrap" style="margin-top: 0.6rem">
             <table>
-              <thead><tr><th>Clase</th><th>Créditos</th><th>Año</th><th>Categoría</th><th>Tipo</th></tr></thead>
+              <thead><tr><th>Clase</th><th>Año</th><th>Créditos</th><th>Bloques</th><th>Tipo</th><th>Categoría</th></tr></thead>
               <tbody id="classesTbody"></tbody>
             </table>
           </div>
         </article>
 
         <article class="card">
-          <h2>7) Generación de horario</h2>
+          <h2>7) Generación y control</h2>
           <div class="inline">
             <button id="generateScheduleBtn" type="button">Generar horario</button>
-            <button id="clearScheduleBtn" type="button" class="warn">Limpiar horario</button>
-            <button id="resetAllBtn" type="button" class="danger">Reiniciar sistema</button>
+            <button id="resetScheduleBtn" type="button" class="btn-warn">Reiniciar horario</button>
+            <button id="resetSystemBtn" type="button" class="btn-danger">Reiniciar sistema</button>
           </div>
-          <div style="margin-top:.8rem" class="table-wrap">
+          <div class="table-wrap" style="margin-top: 0.65rem">
             <table>
               <thead><tr><th>Carrera</th><th>Año</th><th>Grupo</th><th>Clase</th><th>Docente</th><th>Aula</th><th>Día</th><th>Bloques</th></tr></thead>
-              <tbody id="scheduleRows"></tbody>
+              <tbody id="scheduleTbody"></tbody>
+            </table>
+          </div>
+          <div class="table-wrap" style="margin-top: 0.65rem">
+            <table>
+              <thead><tr><th>Advertencias</th></tr></thead>
+              <tbody id="warningsTbody"></tbody>
             </table>
           </div>
         </article>
       </section>
 
-      <section class="grid grid-2" style="margin-top:1rem">
-        <article class="card">
-          <h2>8) Asignación manual / edición</h2>
-          <div class="form-grid grid-3">
-            <label>Grupo
-              <select id="manualGroup"></select>
-            </label>
-            <label>Clase
-              <select id="manualClass"></select>
-            </label>
-            <label>Docente
-              <select id="manualTeacher"></select>
-            </label>
-            <label>Aula
-              <select id="manualRoom"></select>
-            </label>
-            <label>Día
-              <select id="manualDay"></select>
-            </label>
-            <label>Bloque inicio
-              <input id="manualStart" type="number" min="1" value="1" />
-            </label>
-            <label>Bloques consecutivos
-              <input id="manualLength" type="number" min="1" value="2" />
-            </label>
-          </div>
-          <div class="inline" style="margin-top:.65rem">
-            <button id="manualAssignBtn" type="button">Asignar manualmente</button>
-          </div>
-        </article>
-
-        <article class="card">
-          <h2>9) Visualización del horario</h2>
-          <div class="inline">
-            <label>Ver grupo
-              <select id="viewGroup"></select>
-            </label>
-          </div>
-          <div class="schedule-grid" style="margin-top:.65rem">
-            <table id="visualSchedule"></table>
-          </div>
-        </article>
+      <section class="card" style="margin-top: 1rem">
+        <h2>8) Asignación manual / edición</h2>
+        <div class="form g3">
+          <label>Grupo
+            <select id="manualGroup"></select>
+          </label>
+          <label>Clase
+            <select id="manualClass"></select>
+          </label>
+          <label>Docente
+            <select id="manualTeacher"></select>
+          </label>
+          <label>Aula
+            <select id="manualRoom"></select>
+          </label>
+          <label>Día
+            <select id="manualDay"></select>
+          </label>
+          <label>Bloque inicio
+            <input id="manualStart" type="number" min="1" value="1" />
+          </label>
+        </div>
+        <div class="inline" style="margin-top: 0.6rem">
+          <button id="manualAssignBtn" type="button" class="btn-secondary">Asignar manualmente</button>
+        </div>
       </section>
 
-      <p class="foot">Datos almacenados en localStorage. Algoritmo con validación de restricciones, intentos progresivos y registro de advertencias.</p>
+      <section class="card" style="margin-top: 1rem">
+        <h2>9) Visualización de horario (tabla)</h2>
+        <p class="muted" style="margin-bottom: 0.55rem">Filas: bloques | Columnas: días</p>
+        <div class="inline" style="margin-bottom: 0.55rem">
+          <label>Vista por grupo
+            <select id="viewGroup"></select>
+          </label>
+        </div>
+        <div class="schedule">
+          <table id="visualSchedule"></table>
+        </div>
+      </section>
     </main>
 
     <script>
-      (function () {
-        const STORAGE_KEY = "uni_scheduler_v1";
+      const STORAGE_KEY = "uni_scheduler_v1";
 
-        const Model = {
-          empty() {
+      const DB = {
+        coordinaciones: [],
+        carreras: [],
+        periodos: [],
+        turnos: [],
+        aniosAcademicos: [],
+        clases: [],
+        docentes: [],
+        aulas: [],
+        matriculas: [],
+        gruposGenerados: [],
+        horarioFinal: [],
+        advertencias: []
+      };
+
+      let state = loadState();
+
+      const $ = (id) => document.getElementById(id);
+      const refs = {
+        messages: $("messages"),
+        coordName: $("coordName"),
+        careerCode: $("careerCode"),
+        careerName: $("careerName"),
+        periodName: $("periodName"),
+        yearsRange: $("yearsRange"),
+        shiftName: $("shiftName"),
+        shiftDays: $("shiftDays"),
+        blocksPerDay: $("blocksPerDay"),
+        blockDuration: $("blockDuration"),
+        breakBlocks: $("breakBlocks"),
+        lunchConfig: $("lunchConfig"),
+        maxClassesPerDay: $("maxClassesPerDay"),
+        teacherName: $("teacherName"),
+        teacherAreas: $("teacherAreas"),
+        roomName: $("roomName"),
+        roomType: $("roomType"),
+        roomCapacity: $("roomCapacity"),
+        enrollCareer: $("enrollCareer"),
+        enrollYear: $("enrollYear"),
+        enrollStudents: $("enrollStudents"),
+        csvInput: $("csvInput"),
+        csvFile: $("csvFile"),
+        manualGroup: $("manualGroup"),
+        manualClass: $("manualClass"),
+        manualTeacher: $("manualTeacher"),
+        manualRoom: $("manualRoom"),
+        manualDay: $("manualDay"),
+        manualStart: $("manualStart"),
+        viewGroup: $("viewGroup"),
+        academicChips: $("academicChips"),
+        teachersTbody: $("teachersTbody"),
+        roomsTbody: $("roomsTbody"),
+        enrollmentsTbody: $("enrollmentsTbody"),
+        groupsTbody: $("groupsTbody"),
+        classesTbody: $("classesTbody"),
+        scheduleTbody: $("scheduleTbody"),
+        warningsTbody: $("warningsTbody"),
+        visualSchedule: $("visualSchedule")
+      };
+
+      bindEvents();
+      render();
+
+      function bindEvents() {
+        $("saveAcademicBtn").addEventListener("click", saveAcademicConfig);
+        $("saveShiftBtn").addEventListener("click", saveShiftConfig);
+        $("addTeacherBtn").addEventListener("click", addTeacher);
+        $("addRoomBtn").addEventListener("click", addRoom);
+        $("saveEnrollmentBtn").addEventListener("click", saveEnrollment);
+        $("generateGroupsBtn").addEventListener("click", generateGroups);
+        $("loadCsvBtn").addEventListener("click", importCsv);
+        $("generateScheduleBtn").addEventListener("click", generateSchedule);
+        $("manualAssignBtn").addEventListener("click", manualAssign);
+        $("resetScheduleBtn").addEventListener("click", resetSchedule);
+        $("resetSystemBtn").addEventListener("click", resetSystem);
+        refs.csvFile.addEventListener("change", async (e) => {
+          const file = e.target.files?.[0];
+          if (!file) return;
+          refs.csvInput.value = await file.text();
+        });
+        refs.viewGroup.addEventListener("change", renderVisualSchedule);
+      }
+
+      function saveAcademicConfig() {
+        const coordName = refs.coordName.value.trim();
+        const careerCode = refs.careerCode.value.trim().toUpperCase();
+        const careerName = refs.careerName.value.trim();
+        const periodName = refs.periodName.value.trim();
+        const years = refs.yearsRange.value
+          .split(",")
+          .map((y) => Number(y.trim()))
+          .filter((n) => Number.isInteger(n) && n >= 1 && n <= 5);
+
+        if (!coordName || !careerCode || !careerName || !periodName || years.length === 0) {
+          notify("Complete la configuración académica.", "err");
+          return;
+        }
+
+        const coord = { id: id("coord"), nombre: coordName };
+        state.coordinaciones = upsertByKey(state.coordinaciones, coord, "nombre");
+
+        const career = {
+          id: id("car"),
+          codigo: careerCode,
+          nombre: careerName,
+          coordinacionId: coord.id
+        };
+        state.carreras = upsertByKey(state.carreras, career, "codigo");
+
+        const periodo = { id: id("per"), nombre: periodName };
+        state.periodos = upsertByKey(state.periodos, periodo, "nombre");
+
+        state.aniosAcademicos = years.map((n) => ({ id: id("anio"), numero: n }));
+
+        saveState();
+        render();
+        notify("Configuración académica guardada.", "ok");
+      }
+
+      function saveShiftConfig() {
+        const nombre = refs.shiftName.value.trim() || "Diurno";
+        const dias = refs.shiftDays.value
+          .split(",")
+          .map((d) => d.trim())
+          .filter(Boolean);
+        const bloquesPorDia = Number(refs.blocksPerDay.value);
+        const duracion = Number(refs.blockDuration.value);
+        const recesos = refs.breakBlocks.value
+          .split(",")
+          .map((n) => Number(n.trim()))
+          .filter((n) => Number.isInteger(n) && n > 0);
+        const [almuerzoInicio, almuerzoLen] = refs.lunchConfig.value
+          .split("-")
+          .map((n) => Number(n.trim()));
+        const maxPorDia = Number(refs.maxClassesPerDay.value);
+
+        if (dias.length === 0 || bloquesPorDia < 1 || duracion < 30 || maxPorDia < 1) {
+          notify("Turno inválido.", "err");
+          return;
+        }
+
+        const turno = {
+          id: id("tur"),
+          nombre,
+          dias,
+          bloquesPorDia,
+          duracion,
+          recesos,
+          almuerzo: {
+            inicio: Number.isInteger(almuerzoInicio) ? almuerzoInicio : 0,
+            longitud: Number.isInteger(almuerzoLen) ? almuerzoLen : 0
+          },
+          maxClasesPorDia: maxPorDia
+        };
+
+        state.turnos = [turno];
+        saveState();
+        render();
+        notify("Turno guardado.", "ok");
+      }
+
+      function addTeacher() {
+        const nombre = refs.teacherName.value.trim();
+        const areas = refs.teacherAreas.value
+          .split(",")
+          .map((a) => a.trim().toLowerCase())
+          .filter(Boolean);
+        if (!nombre || areas.length === 0) {
+          notify("Ingrese nombre y áreas del docente.", "err");
+          return;
+        }
+
+        state.docentes.push({ id: id("doc"), nombre, areas });
+        refs.teacherName.value = "";
+        refs.teacherAreas.value = "";
+        saveState();
+        render();
+      }
+
+      function addRoom() {
+        const nombre = refs.roomName.value.trim();
+        const tipo = refs.roomType.value;
+        const capacidad = Number(refs.roomCapacity.value);
+        if (!nombre || capacidad < 1) {
+          notify("Aula inválida.", "err");
+          return;
+        }
+        state.aulas.push({ id: id("aul"), nombre, tipo, capacidad });
+        refs.roomName.value = "";
+        refs.roomCapacity.value = "40";
+        saveState();
+        render();
+      }
+
+      function saveEnrollment() {
+        const carreraId = refs.enrollCareer.value;
+        const anio = Number(refs.enrollYear.value);
+        const totalEstudiantes = Number(refs.enrollStudents.value);
+
+        if (!carreraId || !Number.isInteger(anio) || totalEstudiantes < 1) {
+          notify("Matrícula inválida.", "err");
+          return;
+        }
+
+        const idx = state.matriculas.findIndex((m) => m.carreraId === carreraId && m.anio === anio);
+        const data = { id: id("mat"), carreraId, anio, totalEstudiantes };
+        if (idx >= 0) state.matriculas[idx] = data;
+        else state.matriculas.push(data);
+
+        saveState();
+        render();
+      }
+
+      function averageCapacity() {
+        if (state.aulas.length === 0) return 40;
+        const sum = state.aulas.reduce((acc, a) => acc + a.capacidad, 0);
+        return Math.max(1, Math.round(sum / state.aulas.length));
+      }
+
+      function generateGroups() {
+        if (state.matriculas.length === 0) {
+          notify("Registre matrícula antes de generar grupos.", "err");
+          return;
+        }
+
+        const avgCap = averageCapacity();
+        const generated = [];
+
+        for (const matricula of state.matriculas) {
+          const career = state.carreras.find((c) => c.id === matricula.carreraId);
+          if (!career) continue;
+          const qty = Math.max(1, Math.ceil(matricula.totalEstudiantes / avgCap));
+          const base = career.codigo.toUpperCase();
+          for (let i = 0; i < qty; i += 1) {
+            const letter = String.fromCharCode(65 + i);
+            const codigo = `${base}-${matricula.anio}${letter}`;
+            generated.push({
+              id: id("grp"),
+              codigo,
+              carreraId: career.id,
+              anio: matricula.anio,
+              tamano: Math.ceil(matricula.totalEstudiantes / qty)
+            });
+          }
+        }
+
+        state.gruposGenerados = generated;
+        saveState();
+        render();
+        notify(`Se generaron ${generated.length} grupos usando capacidad promedio ${avgCap}.`, "ok");
+      }
+
+      function importCsv() {
+        const raw = refs.csvInput.value.trim();
+        if (!raw) {
+          notify("Pegue o cargue un CSV.", "err");
+          return;
+        }
+
+        const rows = parseCSV(raw);
+        if (rows.length === 0) {
+          notify("CSV sin filas válidas.", "err");
+          return;
+        }
+
+        const parsed = [];
+        for (const row of rows) {
+          const [clase, creditos, compartida, anio, categoria, tipo] = row;
+          if (!clase) continue;
+          const c = Number(creditos);
+          const year = Number(anio);
+          const blocks = creditToBlocks(c);
+          parsed.push({
+            id: id("cla"),
+            nombre: clase.trim(),
+            creditos: Number.isFinite(c) ? c : 1,
+            compartida: String(compartida || "no").trim().toLowerCase() === "si",
+            anio: Number.isInteger(year) ? year : 1,
+            categoria: (categoria || "general").trim().toLowerCase(),
+            tipoAula: (tipo || "aula").trim().toLowerCase(),
+            bloquesConsecutivos: blocks
+          });
+        }
+
+        state.clases = parsed;
+        saveState();
+        render();
+        notify(`Se importaron ${parsed.length} clases.`, "ok");
+      }
+
+      function generateSchedule() {
+        state.horarioFinal = [];
+        state.advertencias = [];
+
+        const turno = state.turnos[0];
+        if (!turno) {
+          notify("Configure un turno antes de generar.", "err");
+          return;
+        }
+        if (state.docentes.length === 0 || state.aulas.length === 0 || state.gruposGenerados.length === 0 || state.clases.length === 0) {
+          notify("Faltan datos: docentes, aulas, grupos o clases.", "err");
+          return;
+        }
+
+        const diasOrdenados = prioritizeDays(turno.dias);
+        const loadCounter = {};
+
+        const groupsByYear = groupBy(state.gruposGenerados, (g) => `${g.carreraId}_${g.anio}`);
+        const classesByYear = groupBy(state.clases, (c) => `${c.anio}`);
+
+        const combos = Object.keys(groupsByYear)
+          .map((k) => {
+            const [carreraId, anioStr] = k.split("_");
             return {
-              coordinaciones: [],
-              carreras: [],
-              periodos: [],
-              turnos: [],
-              aniosAcademicos: [1, 2, 3, 4, 5],
-              clases: [],
-              docentes: [],
-              aulas: [],
-              matricula: [],
-              gruposGenerados: [],
-              horarioFinal: [],
-              advertencias: []
+              carreraId,
+              anio: Number(anioStr),
+              grupos: groupsByYear[k],
+              clases: classesByYear[anioStr] || []
             };
-          }
-        };
+          })
+          .sort((a, b) => a.anio - b.anio);
 
-        let db = load();
-
-        const el = {
-          messages: document.getElementById("messages"),
-          coordName: document.getElementById("coordName"),
-          careerCode: document.getElementById("careerCode"),
-          careerName: document.getElementById("careerName"),
-          periodName: document.getElementById("periodName"),
-          yearsRange: document.getElementById("yearsRange"),
-          saveAcademicBtn: document.getElementById("saveAcademicBtn"),
-          academicChips: document.getElementById("academicChips"),
-
-          shiftName: document.getElementById("shiftName"),
-          shiftDays: document.getElementById("shiftDays"),
-          blocksPerDay: document.getElementById("blocksPerDay"),
-          blockDuration: document.getElementById("blockDuration"),
-          breakBlocks: document.getElementById("breakBlocks"),
-          lunchConfig: document.getElementById("lunchConfig"),
-          maxClassesPerDay: document.getElementById("maxClassesPerDay"),
-          saveShiftBtn: document.getElementById("saveShiftBtn"),
-
-          teacherName: document.getElementById("teacherName"),
-          teacherAreas: document.getElementById("teacherAreas"),
-          addTeacherBtn: document.getElementById("addTeacherBtn"),
-          teachersTbody: document.getElementById("teachersTbody"),
-
-          roomName: document.getElementById("roomName"),
-          roomType: document.getElementById("roomType"),
-          roomCapacity: document.getElementById("roomCapacity"),
-          addRoomBtn: document.getElementById("addRoomBtn"),
-          roomsTbody: document.getElementById("roomsTbody"),
-
-          enrollCareer: document.getElementById("enrollCareer"),
-          enrollYear: document.getElementById("enrollYear"),
-          enrollStudents: document.getElementById("enrollStudents"),
-          saveEnrollmentBtn: document.getElementById("saveEnrollmentBtn"),
-          generateGroupsBtn: document.getElementById("generateGroupsBtn"),
-          enrollmentsTbody: document.getElementById("enrollmentsTbody"),
-
-          csvInput: document.getElementById("csvInput"),
-          importCsvBtn: document.getElementById("importCsvBtn"),
-          classesTbody: document.getElementById("classesTbody"),
-
-          generateScheduleBtn: document.getElementById("generateScheduleBtn"),
-          clearScheduleBtn: document.getElementById("clearScheduleBtn"),
-          resetAllBtn: document.getElementById("resetAllBtn"),
-          scheduleRows: document.getElementById("scheduleRows"),
-
-          manualGroup: document.getElementById("manualGroup"),
-          manualClass: document.getElementById("manualClass"),
-          manualTeacher: document.getElementById("manualTeacher"),
-          manualRoom: document.getElementById("manualRoom"),
-          manualDay: document.getElementById("manualDay"),
-          manualStart: document.getElementById("manualStart"),
-          manualLength: document.getElementById("manualLength"),
-          manualAssignBtn: document.getElementById("manualAssignBtn"),
-
-          viewGroup: document.getElementById("viewGroup"),
-          visualSchedule: document.getElementById("visualSchedule")
-        };
-
-        bind();
-        renderAll();
-
-        function bind() {
-          el.saveAcademicBtn.addEventListener("click", saveAcademicConfig);
-          el.saveShiftBtn.addEventListener("click", saveShiftConfig);
-          el.addTeacherBtn.addEventListener("click", addTeacher);
-          el.addRoomBtn.addEventListener("click", addRoom);
-          el.saveEnrollmentBtn.addEventListener("click", saveEnrollment);
-          el.generateGroupsBtn.addEventListener("click", generateGroupsFromEnrollment);
-          el.importCsvBtn.addEventListener("click", importCsv);
-          el.generateScheduleBtn.addEventListener("click", generateSchedule);
-          el.clearScheduleBtn.addEventListener("click", () => {
-            db.horarioFinal = [];
-            db.advertencias = [];
-            persist();
-            renderAll();
-            notify("Horario limpiado.", "warn");
-          });
-          el.resetAllBtn.addEventListener("click", () => {
-            if (!confirm("¿Reiniciar todo el sistema?")) return;
-            db = Model.empty();
-            persist();
-            renderAll();
-            notify("Sistema reiniciado.", "ok");
-          });
-          el.manualAssignBtn.addEventListener("click", manualAssign);
-          el.viewGroup.addEventListener("change", renderVisualSchedule);
-        }
-
-        function saveAcademicConfig() {
-          const coord = el.coordName.value.trim();
-          const code = el.careerCode.value.trim().toUpperCase();
-          const career = el.careerName.value.trim();
-          const period = el.periodName.value.trim();
-          const years = parseIntList(el.yearsRange.value).filter((n) => n >= 1 && n <= 5);
-
-          if (!coord || !code || !career || !period || years.length === 0) {
-            return notify("Completa coordinación, carrera, periodo y años válidos (1-5).", "err");
-          }
-
-          if (!db.coordinaciones.some((x) => x.nombre === coord)) {
-            db.coordinaciones.push({ id: uid(), nombre: coord });
-          }
-
-          const foundCareer = db.carreras.find((c) => c.codigo === code);
-          if (foundCareer) {
-            foundCareer.nombre = career;
-            foundCareer.anios = [...new Set(years)].sort((a, b) => a - b);
-          } else {
-            db.carreras.push({ id: uid(), codigo: code, nombre: career, anios: [...new Set(years)].sort((a, b) => a - b) });
-          }
-
-          if (!db.periodos.some((p) => p.nombre === period)) {
-            db.periodos.push({ id: uid(), nombre: period });
-          }
-
-          db.aniosAcademicos = [1, 2, 3, 4, 5];
-          persist();
-          renderAll();
-          notify("Configuración académica guardada.", "ok");
-        }
-
-        function saveShiftConfig() {
-          const nombre = el.shiftName.value.trim() || "Diurno";
-          const dias = el.shiftDays.value.split(",").map((s) => s.trim()).filter(Boolean);
-          const bloquesPorDia = Number(el.blocksPerDay.value);
-          const duracion = Number(el.blockDuration.value);
-          const recesos = parseIntList(el.breakBlocks.value);
-          const [almuerzoInicioStr, almuerzoLongitudStr] = (el.lunchConfig.value || "").split("-");
-          const almuerzoInicio = Number(almuerzoInicioStr || 0);
-          const almuerzoLongitud = Number(almuerzoLongitudStr || 0);
-          const maxClasesDia = Number(el.maxClassesPerDay.value);
-
-          if (!dias.length || bloquesPorDia < 1 || duracion < 1 || maxClasesDia < 1) {
-            return notify("Configuración de turno inválida.", "err");
-          }
-
-          db.turnos = [{
-            id: uid(),
-            nombre,
-            dias,
-            bloquesPorDia,
-            duracion,
-            recesos,
-            almuerzo: { inicio: almuerzoInicio, longitud: almuerzoLongitud },
-            maxClasesDia
-          }];
-
-          persist();
-          renderAll();
-          notify("Turno guardado correctamente.", "ok");
-        }
-
-        function addTeacher() {
-          const nombre = el.teacherName.value.trim();
-          const areas = el.teacherAreas.value.split(",").map((a) => normalize(a)).filter(Boolean);
-          if (!nombre || !areas.length) return notify("Docente y áreas son obligatorios.", "err");
-          db.docentes.push({ id: uid(), nombre, areas });
-          el.teacherName.value = "";
-          el.teacherAreas.value = "";
-          persist();
-          renderAll();
-          notify("Docente agregado.", "ok");
-        }
-
-        function addRoom() {
-          const nombre = el.roomName.value.trim();
-          const tipo = el.roomType.value;
-          const capacidad = Number(el.roomCapacity.value);
-          if (!nombre || capacidad < 1) return notify("Datos de aula inválidos.", "err");
-          db.aulas.push({ id: uid(), nombre, tipo, capacidad });
-          el.roomName.value = "";
-          persist();
-          renderAll();
-          notify("Aula agregada.", "ok");
-        }
-
-        function saveEnrollment() {
-          const carreraId = el.enrollCareer.value;
-          const anio = Number(el.enrollYear.value);
-          const estudiantes = Number(el.enrollStudents.value);
-          if (!carreraId || anio < 1 || anio > 5 || estudiantes < 1) {
-            return notify("Matrícula inválida.", "err");
-          }
-          const existing = db.matricula.find((m) => m.carreraId === carreraId && m.anio === anio);
-          if (existing) {
-            existing.totalEstudiantes = estudiantes;
-          } else {
-            db.matricula.push({ id: uid(), carreraId, anio, totalEstudiantes: estudiantes });
-          }
-          persist();
-          renderAll();
-          notify("Matrícula guardada.", "ok");
-        }
-
-        function generateGroupsFromEnrollment() {
-          if (!db.aulas.length) return notify("Debe existir al menos un aula para calcular capacidad promedio.", "err");
-          const capacidadProm = Math.max(1, Math.round(db.aulas.reduce((a, r) => a + r.capacidad, 0) / db.aulas.length));
-          db.gruposGenerados = [];
-
-          db.matricula.forEach((m) => {
-            const carrera = db.carreras.find((c) => c.id === m.carreraId);
-            if (!carrera) return;
-            const cantidad = Math.max(1, Math.ceil(m.totalEstudiantes / capacidadProm));
-            for (let i = 0; i < cantidad; i++) {
-              const sufijo = String.fromCharCode(65 + i);
-              db.gruposGenerados.push({
-                id: uid(),
-                carreraId: carrera.id,
-                anio: m.anio,
-                codigo: `${carrera.codigo}-${m.anio}${sufijo}`,
-                tamano: Math.ceil(m.totalEstudiantes / cantidad)
-              });
+        for (const combo of combos) {
+          for (const clase of combo.clases) {
+            for (const grupo of combo.grupos) {
+              const assigned = progressiveAssign({ carreraId: combo.carreraId, anio: combo.anio, grupo, clase, turno, diasOrdenados, loadCounter });
+              if (!assigned) {
+                state.advertencias.push(`No se pudo asignar ${clase.nombre} para ${grupo.codigo}.`);
+              }
             }
-          });
-
-          persist();
-          renderAll();
-          notify(`Grupos generados con capacidad promedio ${capacidadProm}.`, "ok");
+          }
         }
 
-        function importCsv() {
-          const file = el.csvInput.files?.[0];
-          if (!file) return notify("Selecciona un CSV.", "err");
+        saveState();
+        render();
+        notify(`Horario generado con ${state.horarioFinal.length} asignaciones.`, state.advertencias.length ? "warn" : "ok");
+      }
 
-          const reader = new FileReader();
-          reader.onload = () => {
-            const text = String(reader.result || "").trim();
-            const rows = parseCsv(text);
-            if (!rows.length) return notify("CSV vacío o inválido.", "err");
+      function progressiveAssign(ctx) {
+        const { carreraId, anio, grupo, clase, turno, diasOrdenados, loadCounter } = ctx;
+        const rooms = state.aulas
+          .filter((a) => a.tipo === clase.tipoAula && a.capacidad >= grupo.tamano)
+          .sort((a, b) => a.capacidad - b.capacidad);
+        if (rooms.length === 0) return false;
 
-            const normalized = rows.map((r) => ({
-              id: uid(),
-              nombre: (r.clase || "").trim(),
-              creditos: Number(r.creditos || 1),
-              compartida: String(r.compartida || "no").toLowerCase() === "si",
-              anio: Number(r.anio || 1),
-              categoria: (r.categoria || "general").trim(),
-              tipo: normalizeType(r.tipo || "aula"),
-              bloques: creditsToBlocks(Number(r.creditos || 1))
-            })).filter((c) => c.nombre && c.anio >= 1 && c.anio <= 5);
+        const teachers = selectTeachersForClass(clase);
+        if (teachers.length === 0) return false;
 
-            db.clases = mergeByKey(db.clases, normalized, (x) => `${x.nombre}_${x.anio}_${x.tipo}`);
-            persist();
-            renderAll();
-            notify(`Se importaron/actualizaron ${normalized.length} clases.`, "ok");
-          };
-          reader.readAsText(file);
-        }
+        for (const dia of diasOrdenados) {
+          const countKey = `${grupo.id}_${dia}`;
+          const currentLoad = loadCounter[countKey] || 0;
+          if (currentLoad >= turno.maxClasesPorDia) continue;
 
-        function generateSchedule() {
-          const shift = db.turnos[0];
-          if (!shift) return notify("Configura un turno primero.", "err");
-          if (!db.gruposGenerados.length) return notify("Genera grupos primero.", "err");
-          if (!db.clases.length) return notify("Importa clases primero.", "err");
-          if (!db.aulas.length || !db.docentes.length) return notify("Registra aulas y docentes.", "err");
+          for (let start = 1; start <= turno.bloquesPorDia; start += 1) {
+            const end = start + clase.bloquesConsecutivos - 1;
+            if (end > turno.bloquesPorDia) continue;
+            const bloques = range(start, end);
 
-          db.horarioFinal = [];
-          db.advertencias = [];
+            if (blocksIncludeBreakOrLunch(turno, bloques)) continue;
 
-          const daysPriority = [...shift.dias];
-          const groupLoadPerDay = {};
-
-          const sortedClasses = [...db.clases].sort((a, b) => b.creditos - a.creditos);
-          const groupsByCareerYear = groupBy(db.gruposGenerados, (g) => `${g.carreraId}_${g.anio}`);
-
-          for (const career of db.carreras) {
-            for (let year = 1; year <= 5; year++) {
-              const key = `${career.id}_${year}`;
-              const groups = groupsByCareerYear.get(key) || [];
-              if (!groups.length) continue;
-
-              const classes = sortedClasses.filter((c) => c.anio === year);
-
-              for (const cls of classes) {
-                for (const group of groups) {
-                  const ok = assignClassWithBacktracking({ career, year, group, cls, shift, daysPriority, groupLoadPerDay });
-                  if (!ok) {
-                    db.advertencias.push(`No se pudo asignar ${cls.nombre} para ${group.codigo}.`);
-                  }
+            for (const room of rooms) {
+              for (const teacher of teachers) {
+                if (validateAllRestrictions({ grupo, room, teacher, dia, bloques, turno })) {
+                  state.horarioFinal.push({
+                    id: id("hor"),
+                    carreraId,
+                    anio,
+                    grupoId: grupo.id,
+                    grupo: grupo.codigo,
+                    claseId: clase.id,
+                    clase: clase.nombre,
+                    docenteId: teacher.id,
+                    docente: teacher.nombre,
+                    aulaId: room.id,
+                    aula: room.nombre,
+                    dia,
+                    bloques,
+                    bloquesTexto: `${start}-${end}`
+                  });
+                  loadCounter[countKey] = currentLoad + 1;
+                  return true;
                 }
               }
             }
           }
-
-          persist();
-          renderAll();
-          const msg = `Horario generado con ${db.horarioFinal.length} asignaciones. Advertencias: ${db.advertencias.length}.`;
-          notify(msg, db.advertencias.length ? "warn" : "ok");
         }
 
-        function assignClassWithBacktracking({ career, year, group, cls, shift, daysPriority, groupLoadPerDay }) {
-          const requiredType = normalizeType(cls.tipo);
-          const blocksNeeded = cls.bloques;
-          const dayOrder = [...daysPriority].sort((a, b) => (dayClassCount(group.id, a, groupLoadPerDay) - dayClassCount(group.id, b, groupLoadPerDay)));
+        return false;
+      }
 
-          for (const day of dayOrder) {
-            if (dayClassCount(group.id, day, groupLoadPerDay) >= shift.maxClasesDia) continue;
-
-            for (let start = 1; start <= shift.bloquesPorDia - blocksNeeded + 1; start++) {
-              const blockRange = range(start, start + blocksNeeded - 1);
-              if (isBlockedByBreakOrLunch(blockRange, shift)) continue;
-
-              const validRooms = db.aulas.filter((room) => room.tipo === requiredType && room.capacidad >= group.tamano);
-              for (const room of validRooms) {
-                const teacher = findAvailableTeacher(cls, day, blockRange);
-                if (!teacher) continue;
-
-                if (isGroupBusy(group.id, day, blockRange)) continue;
-                if (isRoomBusy(room.id, day, blockRange)) continue;
-                if (isTeacherBusy(teacher.id, day, blockRange)) continue;
-
-                db.horarioFinal.push({
-                  id: uid(),
-                  carreraId: career.id,
-                  carrera: career.nombre,
-                  anio: year,
-                  grupoId: group.id,
-                  grupo: group.codigo,
-                  claseId: cls.id,
-                  clase: cls.nombre,
-                  docenteId: teacher.id,
-                  docente: teacher.nombre,
-                  aulaId: room.id,
-                  aula: room.nombre,
-                  dia: day,
-                  bloques: blockRange
-                });
-
-                increaseDayLoad(group.id, day, groupLoadPerDay);
-                return true;
-              }
-            }
-          }
-          return false;
+      function validateAllRestrictions({ grupo, room, teacher, dia, bloques, turno }) {
+        for (const b of bloques) {
+          const sameSlot = state.horarioFinal.filter((h) => h.dia === dia && h.bloques.includes(b));
+          if (sameSlot.some((h) => h.docenteId === teacher.id)) return false;
+          if (sameSlot.some((h) => h.aulaId === room.id)) return false;
+          if (sameSlot.some((h) => h.grupoId === grupo.id)) return false;
         }
 
-        function findAvailableTeacher(cls, day, blocks) {
-          const keyArea = normalize(cls.categoria);
-          const keyName = normalize(cls.nombre);
-          const candidates = db.docentes.filter((d) => d.areas.some((a) => keyArea.includes(a) || keyName.includes(a) || a.includes(keyArea)));
-          const list = candidates.length ? candidates : db.docentes;
-          return list.find((t) => !isTeacherBusy(t.id, day, blocks)) || null;
+        if (room.capacidad < grupo.tamano) return false;
+
+        const groupDayCount = state.horarioFinal.filter((h) => h.grupoId === grupo.id && h.dia === dia).length;
+        if (groupDayCount >= turno.maxClasesPorDia) return false;
+
+        return true;
+      }
+
+      function selectTeachersForClass(clase) {
+        const area = clase.categoria.toLowerCase();
+        const exact = state.docentes.filter((d) => d.areas.includes(area));
+        if (exact.length > 0) return exact;
+        return state.docentes;
+      }
+
+      function manualAssign() {
+        const grupoId = refs.manualGroup.value;
+        const claseId = refs.manualClass.value;
+        const docenteId = refs.manualTeacher.value;
+        const aulaId = refs.manualRoom.value;
+        const dia = refs.manualDay.value;
+        const inicio = Number(refs.manualStart.value);
+
+        const grupo = state.gruposGenerados.find((g) => g.id === grupoId);
+        const clase = state.clases.find((c) => c.id === claseId);
+        const docente = state.docentes.find((d) => d.id === docenteId);
+        const aula = state.aulas.find((a) => a.id === aulaId);
+        const turno = state.turnos[0];
+
+        if (!grupo || !clase || !docente || !aula || !dia || !turno) {
+          notify("Complete todos los datos para asignación manual.", "err");
+          return;
         }
 
-        function manualAssign() {
-          const groupId = el.manualGroup.value;
-          const classId = el.manualClass.value;
-          const teacherId = el.manualTeacher.value;
-          const roomId = el.manualRoom.value;
-          const day = el.manualDay.value;
-          const start = Number(el.manualStart.value);
-          const length = Number(el.manualLength.value);
+        const fin = inicio + clase.bloquesConsecutivos - 1;
+        if (inicio < 1 || fin > turno.bloquesPorDia) {
+          notify("Rango de bloques inválido.", "err");
+          return;
+        }
+        const bloques = range(inicio, fin);
 
-          const group = db.gruposGenerados.find((g) => g.id === groupId);
-          const cls = db.clases.find((c) => c.id === classId);
-          const teacher = db.docentes.find((d) => d.id === teacherId);
-          const room = db.aulas.find((r) => r.id === roomId);
-          const shift = db.turnos[0];
+        if (blocksIncludeBreakOrLunch(turno, bloques)) {
+          notify("La asignación incluye receso/almuerzo.", "err");
+          return;
+        }
+        if (clase.tipoAula !== aula.tipo || aula.capacidad < grupo.tamano) {
+          notify("El aula no cumple tipo/capacidad para esta clase.", "err");
+          return;
+        }
 
-          if (!group || !cls || !teacher || !room || !day || !shift) return notify("Completa todos los campos de asignación manual.", "err");
-          const blocks = range(start, start + length - 1);
-          const career = db.carreras.find((c) => c.id === group.carreraId);
+        if (!validateAllRestrictions({ grupo, room: aula, teacher: docente, dia, bloques, turno })) {
+          notify("Conflicto de docente, aula o grupo en ese bloque.", "err");
+          return;
+        }
 
-          const val = validateAssignment({ group, cls, teacher, room, day, blocks, shift });
-          if (!val.ok) return notify(val.msg, "err");
+        const carrera = state.carreras.find((c) => c.id === grupo.carreraId);
+        state.horarioFinal.push({
+          id: id("hor"),
+          carreraId: carrera?.id || "",
+          anio: grupo.anio,
+          grupoId: grupo.id,
+          grupo: grupo.codigo,
+          claseId: clase.id,
+          clase: clase.nombre,
+          docenteId: docente.id,
+          docente: docente.nombre,
+          aulaId: aula.id,
+          aula: aula.nombre,
+          dia,
+          bloques,
+          bloquesTexto: `${inicio}-${fin}`
+        });
 
-          db.horarioFinal.push({
-            id: uid(),
-            carreraId: career?.id || "",
-            carrera: career?.nombre || "",
-            anio: group.anio,
-            grupoId: group.id,
-            grupo: group.codigo,
-            claseId: cls.id,
-            clase: cls.nombre,
-            docenteId: teacher.id,
-            docente: teacher.nombre,
-            aulaId: room.id,
-            aula: room.nombre,
-            dia: day,
-            bloques: blocks
+        saveState();
+        render();
+        notify("Asignación manual registrada.", "ok");
+      }
+
+      function resetSchedule() {
+        state.horarioFinal = [];
+        state.advertencias = [];
+        saveState();
+        render();
+        notify("Horario reiniciado.", "warn");
+      }
+
+      function resetSystem() {
+        state = structuredClone(DB);
+        saveState();
+        render();
+        notify("Sistema reiniciado.", "warn");
+      }
+
+      function render() {
+        renderSelects();
+        renderAcademicChips();
+        renderTeachers();
+        renderRooms();
+        renderEnrollments();
+        renderGroups();
+        renderClasses();
+        renderSchedule();
+        renderWarnings();
+        renderVisualSchedule();
+      }
+
+      function renderSelects() {
+        const careerOpts = state.carreras.map((c) => `<option value="${c.id}">${escapeHtml(c.codigo)} - ${escapeHtml(c.nombre)}</option>`).join("");
+        refs.enrollCareer.innerHTML = careerOpts || '<option value="">Sin carreras</option>';
+
+        const years = state.aniosAcademicos
+          .map((a) => a.numero)
+          .sort((a, b) => a - b);
+        refs.enrollYear.innerHTML = years.map((y) => `<option value="${y}">${y}</option>`).join("") || '<option value="">Sin años</option>';
+
+        refs.manualGroup.innerHTML = state.gruposGenerados.map((g) => `<option value="${g.id}">${escapeHtml(g.codigo)}</option>`).join("") || '<option value="">Sin grupos</option>';
+        refs.manualClass.innerHTML = state.clases.map((c) => `<option value="${c.id}">${escapeHtml(c.nombre)} (${c.anio})</option>`).join("") || '<option value="">Sin clases</option>';
+        refs.manualTeacher.innerHTML = state.docentes.map((d) => `<option value="${d.id}">${escapeHtml(d.nombre)}</option>`).join("") || '<option value="">Sin docentes</option>';
+        refs.manualRoom.innerHTML = state.aulas.map((a) => `<option value="${a.id}">${escapeHtml(a.nombre)} (${a.tipo})</option>`).join("") || '<option value="">Sin aulas</option>';
+
+        const days = state.turnos[0]?.dias || [];
+        refs.manualDay.innerHTML = days.map((d) => `<option value="${d}">${escapeHtml(d)}</option>`).join("") || '<option value="">Sin días</option>';
+
+        refs.viewGroup.innerHTML = state.gruposGenerados.map((g) => `<option value="${g.id}">${escapeHtml(g.codigo)}</option>`).join("") || '<option value="">Sin grupos</option>';
+      }
+
+      function renderAcademicChips() {
+        const chips = [];
+        if (state.coordinaciones[0]) chips.push(`<span class="chip">Coordinación: ${escapeHtml(state.coordinaciones[0].nombre)}</span>`);
+        if (state.carreras[0]) chips.push(`<span class="chip">Carrera: ${escapeHtml(state.carreras[0].codigo)} - ${escapeHtml(state.carreras[0].nombre)}</span>`);
+        if (state.periodos[0]) chips.push(`<span class="chip">Periodo: ${escapeHtml(state.periodos[0].nombre)}</span>`);
+        if (state.turnos[0]) chips.push(`<span class="chip">Turno: ${escapeHtml(state.turnos[0].nombre)}</span>`);
+        refs.academicChips.innerHTML = chips.join("");
+      }
+
+      function renderTeachers() {
+        refs.teachersTbody.innerHTML = state.docentes
+          .map((t) => `<tr><td>${escapeHtml(t.nombre)}</td><td>${escapeHtml(t.areas.join(", "))}</td><td><button type="button" data-del-teacher="${t.id}">X</button></td></tr>`)
+          .join("");
+
+        refs.teachersTbody.querySelectorAll("[data-del-teacher]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            state.docentes = state.docentes.filter((d) => d.id !== btn.dataset.delTeacher);
+            saveState();
+            render();
           });
+        });
+      }
 
-          persist();
-          renderAll();
-          notify("Asignación manual registrada.", "ok");
-        }
+      function renderRooms() {
+        refs.roomsTbody.innerHTML = state.aulas
+          .map((a) => `<tr><td>${escapeHtml(a.nombre)}</td><td>${escapeHtml(a.tipo)}</td><td>${a.capacidad}</td><td><button type="button" data-del-room="${a.id}">X</button></td></tr>`)
+          .join("");
 
-        function validateAssignment({ group, cls, teacher, room, day, blocks, shift }) {
-          if (blocks.some((b) => b < 1 || b > shift.bloquesPorDia)) return { ok: false, msg: "Bloques fuera de rango." };
-          if (isBlockedByBreakOrLunch(blocks, shift)) return { ok: false, msg: "El bloque coincide con receso o almuerzo." };
-          if (room.tipo !== normalizeType(cls.tipo)) return { ok: false, msg: "Tipo de aula no coincide con la clase." };
-          if (room.capacidad < group.tamano) return { ok: false, msg: "Capacidad de aula insuficiente." };
-          if (isGroupBusy(group.id, day, blocks)) return { ok: false, msg: "Choque de grupo en ese bloque." };
-          if (isTeacherBusy(teacher.id, day, blocks)) return { ok: false, msg: "Choque de docente en ese bloque." };
-          if (isRoomBusy(room.id, day, blocks)) return { ok: false, msg: "Choque de aula en ese bloque." };
-          return { ok: true, msg: "ok" };
-        }
+        refs.roomsTbody.querySelectorAll("[data-del-room]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            state.aulas = state.aulas.filter((a) => a.id !== btn.dataset.delRoom);
+            saveState();
+            render();
+          });
+        });
+      }
 
-        function isGroupBusy(groupId, day, blocks) {
-          return db.horarioFinal.some((h) => h.grupoId === groupId && h.dia === day && overlap(h.bloques, blocks));
-        }
-        function isTeacherBusy(teacherId, day, blocks) {
-          return db.horarioFinal.some((h) => h.docenteId === teacherId && h.dia === day && overlap(h.bloques, blocks));
-        }
-        function isRoomBusy(roomId, day, blocks) {
-          return db.horarioFinal.some((h) => h.aulaId === roomId && h.dia === day && overlap(h.bloques, blocks));
-        }
-
-        function isBlockedByBreakOrLunch(blocks, shift) {
-          const lunch = range(shift.almuerzo.inicio, shift.almuerzo.inicio + shift.almuerzo.longitud - 1);
-          return blocks.some((b) => shift.recesos.includes(b) || lunch.includes(b));
-        }
-
-        function renderAll() {
-          renderAcademicChips();
-          renderTeachers();
-          renderRooms();
-          renderEnrollmentSelectors();
-          renderEnrollments();
-          renderClasses();
-          renderScheduleRows();
-          renderManualSelectors();
-          renderViewGroupSelector();
-          renderVisualSchedule();
-          renderWarningSummary();
-        }
-
-        function renderAcademicChips() {
-          const parts = [
-            ...db.coordinaciones.map((x) => `Coordinación: ${x.nombre}`),
-            ...db.carreras.map((x) => `Carrera ${x.codigo} (${x.nombre}) años:${x.anios.join("-")}`),
-            ...db.periodos.map((x) => `Periodo: ${x.nombre}`),
-            ...db.turnos.map((x) => `Turno ${x.nombre}: ${x.dias.join("/")}`),
-            `Grupos: ${db.gruposGenerados.length}`
-          ];
-          el.academicChips.innerHTML = parts.map((p) => `<span class="chip">${escapeHtml(p)}</span>`).join("");
-        }
-
-        function renderTeachers() {
-          el.teachersTbody.innerHTML = db.docentes.map((d) => `
-            <tr>
-              <td>${escapeHtml(d.nombre)}</td>
-              <td>${escapeHtml(d.areas.join(", "))}</td>
-              <td><button data-del-teacher="${d.id}">Eliminar</button></td>
-            </tr>`).join("");
-
-          el.teachersTbody.querySelectorAll("[data-del-teacher]").forEach((btn) => btn.addEventListener("click", () => {
-            db.docentes = db.docentes.filter((x) => x.id !== btn.dataset.delTeacher);
-            persist();
-            renderAll();
-          }));
-        }
-
-        function renderRooms() {
-          el.roomsTbody.innerHTML = db.aulas.map((r) => `
-            <tr>
-              <td>${escapeHtml(r.nombre)}</td>
-              <td>${escapeHtml(r.tipo)}</td>
-              <td>${r.capacidad}</td>
-              <td><button data-del-room="${r.id}">Eliminar</button></td>
-            </tr>`).join("");
-
-          el.roomsTbody.querySelectorAll("[data-del-room]").forEach((btn) => btn.addEventListener("click", () => {
-            db.aulas = db.aulas.filter((x) => x.id !== btn.dataset.delRoom);
-            persist();
-            renderAll();
-          }));
-        }
-
-        function renderEnrollmentSelectors() {
-          el.enrollCareer.innerHTML = db.carreras.map((c) => `<option value="${c.id}">${escapeHtml(c.codigo)} - ${escapeHtml(c.nombre)}</option>`).join("");
-          el.enrollYear.innerHTML = [1,2,3,4,5].map((y) => `<option value="${y}">${y}</option>`).join("");
-        }
-
-        function renderEnrollments() {
-          el.enrollmentsTbody.innerHTML = db.matricula.map((m) => {
-            const c = db.carreras.find((x) => x.id === m.carreraId);
+      function renderEnrollments() {
+        refs.enrollmentsTbody.innerHTML = state.matriculas
+          .map((m) => {
+            const c = state.carreras.find((x) => x.id === m.carreraId);
             return `<tr><td>${escapeHtml(c?.codigo || "N/A")}</td><td>${m.anio}</td><td>${m.totalEstudiantes}</td></tr>`;
-          }).join("");
-        }
+          })
+          .join("");
+      }
 
-        function renderClasses() {
-          el.classesTbody.innerHTML = db.clases.map((c) => `
-            <tr>
-              <td>${escapeHtml(c.nombre)}</td>
-              <td>${c.creditos} (${c.bloques} bloques)</td>
-              <td>${c.anio}</td>
-              <td>${escapeHtml(c.categoria)}</td>
-              <td>${escapeHtml(c.tipo)}</td>
-            </tr>`).join("");
-        }
+      function renderGroups() {
+        refs.groupsTbody.innerHTML = state.gruposGenerados
+          .map((g) => {
+            const c = state.carreras.find((x) => x.id === g.carreraId);
+            return `<tr><td>${escapeHtml(g.codigo)}</td><td>${escapeHtml(c?.codigo || "N/A")}</td><td>${g.anio}</td><td>${g.tamano}</td></tr>`;
+          })
+          .join("");
+      }
 
-        function renderScheduleRows() {
-          el.scheduleRows.innerHTML = db.horarioFinal.map((h) => `
-            <tr>
-              <td>${escapeHtml(h.carrera)}</td>
+      function renderClasses() {
+        refs.classesTbody.innerHTML = state.clases
+          .map((c) => `<tr><td>${escapeHtml(c.nombre)}</td><td>${c.anio}</td><td>${c.creditos}</td><td>${c.bloquesConsecutivos}</td><td>${escapeHtml(c.tipoAula)}</td><td>${escapeHtml(c.categoria)}</td></tr>`)
+          .join("");
+      }
+
+      function renderSchedule() {
+        refs.scheduleTbody.innerHTML = state.horarioFinal
+          .map((h) => {
+            const c = state.carreras.find((x) => x.id === h.carreraId);
+            return `<tr>
+              <td>${escapeHtml(c?.codigo || "")}</td>
               <td>${h.anio}</td>
               <td>${escapeHtml(h.grupo)}</td>
               <td>${escapeHtml(h.clase)}</td>
               <td>${escapeHtml(h.docente)}</td>
               <td>${escapeHtml(h.aula)}</td>
               <td>${escapeHtml(h.dia)}</td>
-              <td>${h.bloques.join(",")}</td>
-            </tr>`).join("");
+              <td>${escapeHtml(h.bloquesTexto)}</td>
+            </tr>`;
+          })
+          .join("");
+      }
+
+      function renderWarnings() {
+        refs.warningsTbody.innerHTML = state.advertencias.map((w) => `<tr><td>${escapeHtml(w)}</td></tr>`).join("") || '<tr><td class="muted">Sin advertencias.</td></tr>';
+      }
+
+      function renderVisualSchedule() {
+        const groupId = refs.viewGroup.value;
+        const turno = state.turnos[0];
+        if (!groupId || !turno) {
+          refs.visualSchedule.innerHTML = "";
+          return;
         }
 
-        function renderManualSelectors() {
-          el.manualGroup.innerHTML = db.gruposGenerados.map((g) => `<option value="${g.id}">${escapeHtml(g.codigo)}</option>`).join("");
-          el.manualClass.innerHTML = db.clases.map((c) => `<option value="${c.id}">${escapeHtml(c.nombre)} (A${c.anio})</option>`).join("");
-          el.manualTeacher.innerHTML = db.docentes.map((d) => `<option value="${d.id}">${escapeHtml(d.nombre)}</option>`).join("");
-          el.manualRoom.innerHTML = db.aulas.map((r) => `<option value="${r.id}">${escapeHtml(r.nombre)} (${escapeHtml(r.tipo)})</option>`).join("");
-          const days = db.turnos[0]?.dias || [];
-          el.manualDay.innerHTML = days.map((d) => `<option value="${escapeHtml(d)}">${escapeHtml(d)}</option>`).join("");
-        }
+        const items = state.horarioFinal.filter((h) => h.grupoId === groupId);
+        let html = "<thead><tr><th>Bloque</th>";
+        for (const dia of turno.dias) html += `<th>${escapeHtml(dia)}</th>`;
+        html += "</tr></thead><tbody>";
 
-        function renderViewGroupSelector() {
-          const current = el.viewGroup.value;
-          el.viewGroup.innerHTML = db.gruposGenerados.map((g) => `<option value="${g.id}">${escapeHtml(g.codigo)}</option>`).join("");
-          if (db.gruposGenerados.some((g) => g.id === current)) el.viewGroup.value = current;
-        }
-
-        function renderVisualSchedule() {
-          const shift = db.turnos[0];
-          const groupId = el.viewGroup.value;
-          if (!shift || !groupId) {
-            el.visualSchedule.innerHTML = "<tr><td class='muted'>Sin datos para visualizar.</td></tr>";
-            return;
+        for (let b = 1; b <= turno.bloquesPorDia; b += 1) {
+          html += `<tr><th>${b}</th>`;
+          for (const dia of turno.dias) {
+            const slot = items.filter((it) => it.dia === dia && it.bloques.includes(b));
+            html += `<td class="slot">${slot
+              .map(
+                (s) => `<div class="slot-item">
+                    <strong>${escapeHtml(s.clase)}</strong>
+                    <small>${escapeHtml(s.grupo)} | ${escapeHtml(s.docente)}</small>
+                    <small>${escapeHtml(s.aula)} (${escapeHtml(s.bloquesTexto)})</small>
+                    <button type="button" data-remove-horario="${s.id}">Eliminar</button>
+                  </div>`
+              )
+              .join("")}</td>`;
           }
-          const days = shift.dias;
-          const rows = [];
-          rows.push(`<thead><tr><th>Bloque</th>${days.map((d) => `<th>${escapeHtml(d)}</th>`).join("")}</tr></thead>`);
+          html += "</tr>";
+        }
 
-          const body = [];
-          for (let b = 1; b <= shift.bloquesPorDia; b++) {
-            body.push(`<tr><th>${b}</th>${days.map((d) => renderCell(groupId, d, b)).join("")}</tr>`);
+        html += "</tbody>";
+        refs.visualSchedule.innerHTML = html;
+
+        refs.visualSchedule.querySelectorAll("[data-remove-horario]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            state.horarioFinal = state.horarioFinal.filter((h) => h.id !== btn.dataset.removeHorario);
+            saveState();
+            render();
+            notify("Asignación eliminada.", "warn");
+          });
+        });
+      }
+
+      function blocksIncludeBreakOrLunch(turno, bloques) {
+        const breakSet = new Set(turno.recesos);
+        const lunchSet = new Set();
+        const start = turno.almuerzo?.inicio || 0;
+        const len = turno.almuerzo?.longitud || 0;
+        for (let i = 0; i < len; i += 1) lunchSet.add(start + i);
+        return bloques.some((b) => breakSet.has(b) || lunchSet.has(b));
+      }
+
+      function creditToBlocks(credit) {
+        if (credit <= 1) return 1;
+        if (credit <= 3) return 2;
+        if (credit <= 5) return 3;
+        return 4;
+      }
+
+      function parseCSV(raw) {
+        const lines = raw.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+        if (lines.length === 0) return [];
+
+        const rows = lines.map((line) => splitCSVLine(line));
+        const first = rows[0].map((c) => c.toLowerCase());
+        const hasHeader = ["clase", "creditos", "compartida", "anio", "categoria", "tipo"].every((v) => first.includes(v));
+        return hasHeader ? rows.slice(1) : rows;
+      }
+
+      function splitCSVLine(line) {
+        const out = [];
+        let cur = "";
+        let quoted = false;
+        for (let i = 0; i < line.length; i += 1) {
+          const ch = line[i];
+          if (ch === '"') {
+            quoted = !quoted;
+            continue;
           }
-          rows.push(`<tbody>${body.join("")}</tbody>`);
-          el.visualSchedule.innerHTML = rows.join("");
-
-          el.visualSchedule.querySelectorAll("[data-del-schedule]").forEach((btn) => {
-            btn.addEventListener("click", () => {
-              db.horarioFinal = db.horarioFinal.filter((x) => x.id !== btn.dataset.delSchedule);
-              persist();
-              renderAll();
-            });
-          });
-        }
-
-        function renderCell(groupId, day, block) {
-          const items = db.horarioFinal.filter((h) => h.grupoId === groupId && h.dia === day && h.bloques.includes(block));
-          if (!items.length) return `<td class="slot-cell"></td>`;
-          return `<td class="slot-cell">${items.map((h) => `
-            <div class="slot-item">
-              <strong>${escapeHtml(h.clase)}</strong><br/>
-              ${escapeHtml(h.grupo)} · ${escapeHtml(h.docente)}<br/>
-              ${escapeHtml(h.aula)}
-              <div><button data-del-schedule="${h.id}" type="button">Eliminar</button></div>
-            </div>`).join("")}</td>`;
-        }
-
-        function renderWarningSummary() {
-          if (!db.advertencias.length) return;
-          const summary = db.advertencias.slice(0, 3).join(" ");
-          notify(`Advertencias (${db.advertencias.length}): ${summary}`, "warn");
-        }
-
-        function notify(msg, type = "ok") {
-          el.messages.innerHTML = `<div class="status ${type}">${escapeHtml(msg)}</div>`;
-        }
-
-        function creditsToBlocks(credits) {
-          if (credits <= 2) return 2;
-          if (credits <= 4) return 3;
-          return 4;
-        }
-
-        function load() {
-          try {
-            const raw = localStorage.getItem(STORAGE_KEY);
-            if (!raw) return Model.empty();
-            const parsed = JSON.parse(raw);
-            return { ...Model.empty(), ...parsed };
-          } catch {
-            return Model.empty();
+          if (ch === "," && !quoted) {
+            out.push(cur.trim());
+            cur = "";
+          } else {
+            cur += ch;
           }
         }
+        out.push(cur.trim());
+        return out;
+      }
 
-        function persist() {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
-        }
+      function prioritizeDays(days) {
+        if (days.length <= 2) return [...days];
+        const mid = Math.floor(days.length / 2);
+        return [...days.slice(mid), ...days.slice(0, mid)];
+      }
 
-        function uid() {
-          return crypto.randomUUID();
-        }
+      function groupBy(arr, keyFn) {
+        return arr.reduce((acc, item) => {
+          const k = keyFn(item);
+          if (!acc[k]) acc[k] = [];
+          acc[k].push(item);
+          return acc;
+        }, {});
+      }
 
-        function normalize(text) {
-          return String(text || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+      function upsertByKey(list, item, key) {
+        const i = list.findIndex((x) => x[key] === item[key]);
+        if (i >= 0) {
+          const clone = [...list];
+          clone[i] = { ...clone[i], ...item };
+          return clone;
         }
+        return [...list, item];
+      }
 
-        function normalizeType(t) {
-          const n = normalize(t);
-          if (n.includes("lab")) return "laboratorio";
-          if (n.includes("taller")) return "taller";
-          return "aula";
-        }
+      function range(start, end) {
+        return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+      }
 
-        function parseIntList(text) {
-          return String(text || "").split(",").map((x) => Number(x.trim())).filter((n) => Number.isFinite(n));
-        }
+      function notify(text, type = "ok") {
+        refs.messages.innerHTML = `<div class="status ${type}">${escapeHtml(text)}</div>`;
+      }
 
-        function parseCsv(text) {
-          const lines = text.split(/\r?\n/).filter(Boolean);
-          if (!lines.length) return [];
-          const headers = lines[0].split(",").map((h) => normalize(h));
-          return lines.slice(1).map((line) => {
-            const values = line.split(",").map((v) => v.trim());
-            const row = {};
-            headers.forEach((h, i) => {
-              row[h] = values[i] || "";
-            });
-            return row;
-          });
-        }
+      function id(prefix) {
+        return `${prefix}_${crypto.randomUUID()}`;
+      }
 
-        function mergeByKey(base, extra, keyFn) {
-          const map = new Map(base.map((x) => [keyFn(x), x]));
-          extra.forEach((x) => map.set(keyFn(x), x));
-          return [...map.values()];
-        }
+      function escapeHtml(value) {
+        return String(value)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
 
-        function groupBy(arr, keyFn) {
-          const map = new Map();
-          arr.forEach((item) => {
-            const key = keyFn(item);
-            const list = map.get(key) || [];
-            list.push(item);
-            map.set(key, list);
-          });
-          return map;
+      function loadState() {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return structuredClone(DB);
+        try {
+          const parsed = JSON.parse(raw);
+          return {
+            ...structuredClone(DB),
+            ...parsed
+          };
+        } catch {
+          return structuredClone(DB);
         }
+      }
 
-        function overlap(a, b) {
-          const set = new Set(a);
-          return b.some((x) => set.has(x));
-        }
-
-        function range(start, end) {
-          if (start > end) return [];
-          return Array.from({ length: end - start + 1 }, (_, i) => start + i);
-        }
-
-        function dayClassCount(groupId, day, map) {
-          return map[`${groupId}_${day}`] || 0;
-        }
-
-        function increaseDayLoad(groupId, day, map) {
-          const key = `${groupId}_${day}`;
-          map[key] = (map[key] || 0) + 1;
-        }
-
-        function escapeHtml(text) {
-          return String(text)
-            .replaceAll("&", "&amp;")
-            .replaceAll("<", "&lt;")
-            .replaceAll(">", "&gt;")
-            .replaceAll('"', "&quot;")
-            .replaceAll("'", "&#039;");
-        }
-      })();
+      function saveState() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      }
     </script>
   </body>
 </html>
