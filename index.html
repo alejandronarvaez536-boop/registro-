@@ -461,6 +461,15 @@
           <table id="visualSchedule"></table>
         </div>
       </section>
+
+      <section class="card" style="margin-top: 1rem">
+        <h2>10) Resultado estructurado (JSON)</h2>
+        <p class="muted" style="margin-bottom: 0.55rem">Estructura final de horario lista para exportar.</p>
+        <label>
+          Horario final
+          <textarea id="jsonOutput" readonly style="min-height: 180px"></textarea>
+        </label>
+      </section>
     </main>
 
     <script>
@@ -524,6 +533,8 @@
         scheduleTbody: $("scheduleTbody"),
         warningsTbody: $("warningsTbody"),
         visualSchedule: $("visualSchedule")
+        ,
+        jsonOutput: $("jsonOutput")
       };
 
       bindEvents();
@@ -968,6 +979,7 @@
         renderSchedule();
         renderWarnings();
         renderVisualSchedule();
+        renderJsonOutput();
       }
 
       function renderSelects() {
@@ -1115,6 +1127,23 @@
             notify("Asignación eliminada.", "warn");
           });
         });
+      }
+
+      function renderJsonOutput() {
+        refs.jsonOutput.value = JSON.stringify(
+          state.horarioFinal.map((h) => ({
+            carrera: state.carreras.find((c) => c.id === h.carreraId)?.codigo || "",
+            anio: h.anio,
+            grupo: h.grupo,
+            clase: h.clase,
+            docente: h.docente,
+            aula: h.aula,
+            dia: h.dia,
+            bloques: h.bloques
+          })),
+          null,
+          2
+        );
       }
 
       function blocksIncludeBreakOrLunch(turno, bloques) {
