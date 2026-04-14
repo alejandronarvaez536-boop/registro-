@@ -1,84 +1,1041 @@
 <!doctype html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Registro Escolar</title>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <main class="container">
-      <h1>Registro escolar</h1>
-      <p class="subtitle">
-        Administra años escolares, materias y alumnos. Toda la información se guarda en tu navegador.
-      </p>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generador de Horarios Universitarios Inteligente</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --primary: #2563eb;
+      --primary-2: #1d4ed8;
+      --danger: #dc2626;
+      --ok: #16a34a;
+      --border: #e5e7eb;
+      --shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+    }
 
-      <section class="panel">
-        <h2>1) Crear año escolar</h2>
-        <form id="year-form" class="grid-form">
-          <label>
-            Nombre del año escolar
-            <input type="text" id="year-name" placeholder="Ej: 2025" required />
-          </label>
-          <button type="submit">Guardar año</button>
-        </form>
-      </section>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    }
 
-      <section class="panel">
-        <h2>2) Registrar materia</h2>
-        <form id="subject-form" class="grid-form">
-          <label>
-            Año escolar
-            <select id="subject-year" required></select>
-          </label>
-          <label>
-            Nombre de la materia
-            <input type="text" id="subject-name" placeholder="Ej: Matemáticas" required />
-          </label>
-          <button type="submit">Guardar materia</button>
-        </form>
-      </section>
+    body {
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.4;
+      padding: 20px;
+    }
 
-      <section class="panel">
-        <h2>3) Registrar alumno</h2>
-        <form id="student-form" class="grid-form">
-          <label>
-            Nombre del alumno
-            <input type="text" id="student-name" placeholder="Ej: María López" required />
-          </label>
-          <label>
-            Año escolar
-            <select id="student-year" required></select>
-          </label>
-          <label>
-            Materia
-            <select id="student-subject" required></select>
-          </label>
-          <button type="submit">Guardar alumno</button>
-        </form>
-      </section>
+    h1, h2, h3 {
+      margin-bottom: 10px;
+      color: #0f172a;
+    }
 
+    .container {
+      max-width: 1500px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 16px;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .left-column {
+      position: sticky;
+      top: 20px;
+      align-self: start;
+      max-height: calc(100vh - 40px);
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .row-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    label {
+      font-size: 0.85rem;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    input, select, textarea, button {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      font-weight: 600;
+      background: var(--primary);
+      color: #fff;
+      transition: .2s ease;
+    }
+
+    button:hover {
+      background: var(--primary-2);
+    }
+
+    .btn-secondary { background: #0ea5e9; }
+    .btn-secondary:hover { background: #0284c7; }
+    .btn-danger { background: var(--danger); }
+    .btn-danger:hover { background: #b91c1c; }
+    .btn-ok { background: var(--ok); }
+    .btn-ok:hover { background: #15803d; }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .actions button {
+      flex: 1;
+      min-width: 140px;
+    }
+
+    .chip-list {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .chip {
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 0.8rem;
+    }
+
+    .table-wrap {
+      overflow: auto;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1100px;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      vertical-align: top;
+      padding: 8px;
+      font-size: 0.82rem;
+    }
+
+    th {
+      background: #f8fafc;
+      text-align: left;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+
+    .entry {
+      background: #ecfeff;
+      border: 1px solid #a5f3fc;
+      border-radius: 8px;
+      padding: 6px;
+      margin-bottom: 4px;
+      cursor: pointer;
+    }
+
+    .entry small {
+      display: block;
+      color: #155e75;
+      font-size: 0.72rem;
+      margin-top: 2px;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .log {
+      background: #0f172a;
+      color: #e2e8f0;
+      border-radius: 10px;
+      padding: 10px;
+      min-height: 120px;
+      max-height: 220px;
+      overflow: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.78rem;
+      white-space: pre-wrap;
+    }
+
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .kpi {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+      box-shadow: var(--shadow);
+    }
+
+    .kpi .label {
+      color: var(--muted);
+      font-size: 0.75rem;
+    }
+
+    .kpi .value {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-top: 3px;
+    }
+
+    .subgrid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .tiny {
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    @media (max-width: 1200px) {
+      .container { grid-template-columns: 1fr; }
+      .left-column { position: static; max-height: none; }
+      .kpis { grid-template-columns: 1fr 1fr; }
+      .subgrid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Generador de Horarios Universitarios Inteligente</h1>
+  <p class="muted">Sistema académico de asignación automática de horarios con restricciones.</p>
+
+  <div class="container">
+    <div class="left-column">
       <section class="panel">
-        <div class="panel-header">
-          <h2>Página principal: alumnos registrados</h2>
-          <button id="clear-data" class="danger" type="button">Borrar todo</button>
+        <h2>Configuración Académica</h2>
+        <div class="row">
+          <div>
+            <label>Coordinación</label>
+            <input id="coordName" placeholder="Ej. Coordinación Ingeniería" />
+          </div>
+          <div>
+            <label>Periodo</label>
+            <input id="periodName" placeholder="Ej. 2026-I" />
+          </div>
         </div>
-        <div class="table-wrapper">
-          <table>
-            <thead>
-              <tr>
-                <th>Alumno</th>
-                <th>Año escolar</th>
-                <th>Materia</th>
-              </tr>
-            </thead>
-            <tbody id="students-table-body"></tbody>
-          </table>
-          <p id="empty-state" class="empty">No hay alumnos registrados todavía.</p>
+        <div class="row">
+          <div>
+            <label>Código carrera</label>
+            <input id="careerCode" placeholder="SIS" />
+          </div>
+          <div>
+            <label>Nombre carrera</label>
+            <input id="careerName" placeholder="Ingeniería de Sistemas" />
+          </div>
+        </div>
+        <button id="addCareerBtn">Agregar Carrera</button>
+        <div id="careerList" class="chip-list"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Configuración de Turnos</h2>
+        <div class="row-3">
+          <div>
+            <label>Nombre turno</label>
+            <input id="shiftName" value="Diurno" />
+          </div>
+          <div>
+            <label>Inicio jornada</label>
+            <input id="startTime" type="time" value="07:00" />
+          </div>
+          <div>
+            <label>Duración (min)</label>
+            <input id="blockDuration" type="number" value="45" min="30" />
+          </div>
+        </div>
+        <div class="row-3">
+          <div>
+            <label>Bloques/día</label>
+            <input id="blocksPerDay" type="number" value="10" min="4" max="14" />
+          </div>
+          <div>
+            <label>Receso (bloque)</label>
+            <input id="breakBlock" type="number" value="4" min="1" />
+          </div>
+          <div>
+            <label>Almuerzo (bloque)</label>
+            <input id="lunchBlock" type="number" value="7" min="1" />
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label>Máx clases/día por grupo</label>
+            <input id="maxDaily" type="number" value="6" min="1" max="10" />
+          </div>
+          <div>
+            <label>Días (coma)</label>
+            <input id="daysInput" value="Lunes,Martes,Miércoles,Jueves,Viernes" />
+          </div>
+        </div>
+        <button id="saveShiftBtn" class="btn-secondary">Guardar Turno</button>
+      </section>
+
+      <section class="panel">
+        <h2>Recursos</h2>
+        <h3>Docentes</h3>
+        <div class="row">
+          <div>
+            <label>Nombre docente</label>
+            <input id="teacherName" placeholder="Dra. Ana López" />
+          </div>
+          <div>
+            <label>Áreas (coma)</label>
+            <input id="teacherAreas" placeholder="Programación,Matemática" />
+          </div>
+        </div>
+        <button id="addTeacherBtn">Agregar Docente</button>
+        <div id="teacherList" class="chip-list"></div>
+
+        <h3 style="margin-top:12px;">Aulas</h3>
+        <div class="row-3">
+          <div>
+            <label>Nombre aula</label>
+            <input id="roomName" placeholder="A-101" />
+          </div>
+          <div>
+            <label>Tipo</label>
+            <select id="roomType">
+              <option value="aula">Aula</option>
+              <option value="laboratorio">Laboratorio</option>
+              <option value="taller">Taller</option>
+            </select>
+          </div>
+          <div>
+            <label>Capacidad</label>
+            <input id="roomCapacity" type="number" value="40" min="10" />
+          </div>
+        </div>
+        <button id="addRoomBtn">Agregar Aula</button>
+        <div id="roomList" class="chip-list"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Matrícula por Carrera y Año</h2>
+        <div class="row-3">
+          <div>
+            <label>Carrera</label>
+            <select id="enrollCareer"></select>
+          </div>
+          <div>
+            <label>Año</label>
+            <select id="enrollYear"></select>
+          </div>
+          <div>
+            <label>Estudiantes</label>
+            <input id="enrollCount" type="number" min="1" value="120" />
+          </div>
+        </div>
+        <button id="addEnrollBtn">Registrar Matrícula</button>
+        <div id="enrollList" class="chip-list"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Carga de Clases (CSV)</h2>
+        <label>Formato: clase,creditos,compartida,anio,categoria,tipo</label>
+        <textarea id="csvInput" placeholder="Programación I,4,no,1,básica,laboratorio"></textarea>
+        <div class="actions">
+          <button id="loadCsvBtn">Cargar CSV</button>
+          <button id="loadSampleBtn" class="btn-secondary">Cargar Ejemplo</button>
         </div>
       </section>
-    </main>
 
-    <script src="script.js"></script>
-  </body>
+      <section class="panel">
+        <h2>Acciones</h2>
+        <div class="actions">
+          <button id="generateBtn" class="btn-ok">Generar Horario</button>
+          <button id="resetBtn" class="btn-danger">Reiniciar Sistema</button>
+        </div>
+        <p class="tiny" style="margin-top:8px;">Clic en una clase del horario para edición manual.</p>
+      </section>
+    </div>
+
+    <div>
+      <div class="kpis">
+        <div class="kpi"><div class="label">Carreras</div><div class="value" id="kpiCareers">0</div></div>
+        <div class="kpi"><div class="label">Docentes</div><div class="value" id="kpiTeachers">0</div></div>
+        <div class="kpi"><div class="label">Aulas</div><div class="value" id="kpiRooms">0</div></div>
+        <div class="kpi"><div class="label">Asignaciones</div><div class="value" id="kpiAssign">0</div></div>
+      </div>
+
+      <section class="panel">
+        <h2>Horario Final</h2>
+        <div class="row-3">
+          <div>
+            <label>Filtro carrera</label>
+            <select id="filterCareer"></select>
+          </div>
+          <div>
+            <label>Filtro año</label>
+            <select id="filterYear"></select>
+          </div>
+          <div>
+            <label>Filtro grupo</label>
+            <select id="filterGroup"></select>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table id="scheduleTable"></table>
+        </div>
+      </section>
+
+      <div class="subgrid">
+        <section class="panel">
+          <h2>Advertencias del Motor</h2>
+          <div id="warnings" class="log"></div>
+        </section>
+        <section class="panel">
+          <h2>Mensajes del Sistema</h2>
+          <div id="messages" class="log"></div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "scheduleGeneratorData_v1";
+
+    const initialState = () => ({
+      meta: {
+        coordinations: [],
+        periods: [],
+        careers: [],
+        shifts: []
+      },
+      teachers: [],
+      rooms: [],
+      classes: [],
+      enrollment: [],
+      groups: [],
+      schedule: [],
+      warnings: [],
+      counters: {
+        coordination: 1,
+        period: 1,
+        career: 1,
+        shift: 1,
+        teacher: 1,
+        room: 1,
+        class: 1,
+        enrollment: 1,
+        group: 1,
+        schedule: 1
+      }
+    });
+
+    let db = loadState();
+
+    function uid(type) {
+      const next = db.counters[type] || 1;
+      db.counters[type] = next + 1;
+      return `${type.toUpperCase()}-${next}`;
+    }
+
+    function loadState() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return initialState();
+      try {
+        return JSON.parse(raw);
+      } catch {
+        return initialState();
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+    }
+
+    function logMessage(msg) {
+      const el = document.getElementById("messages");
+      el.textContent = `[${new Date().toLocaleTimeString()}] ${msg}\n` + el.textContent;
+    }
+
+    function renderWarnings() {
+      document.getElementById("warnings").textContent = db.warnings.join("\n") || "Sin advertencias.";
+    }
+
+    function getCurrentShift() {
+      return db.meta.shifts[db.meta.shifts.length - 1] || null;
+    }
+
+    function blocksFromCredits(credits) {
+      if (credits <= 2) return 1;
+      if (credits <= 4) return 2;
+      return 3;
+    }
+
+    function normalizeClassType(type) {
+      const t = (type || "").toLowerCase().trim();
+      if (t.includes("lab")) return "laboratorio";
+      if (t.includes("taller")) return "taller";
+      return "aula";
+    }
+
+    function renderChips() {
+      renderList("careerList", db.meta.careers.map(c => `${c.code}-${c.name}`));
+      renderList("teacherList", db.teachers.map(t => `${t.name} [${t.areas.join("/")}]`));
+      renderList("roomList", db.rooms.map(r => `${r.name} (${r.type}, cap:${r.capacity})`));
+      renderList("enrollList", db.enrollment.map(e => `${careerCodeById(e.careerId)} Año ${e.year}: ${e.students}`));
+    }
+
+    function renderList(id, items) {
+      const el = document.getElementById(id);
+      el.innerHTML = items.map(i => `<span class="chip">${i}</span>`).join("") || `<span class="muted">Sin registros</span>`;
+    }
+
+    function careerCodeById(id) {
+      const c = db.meta.careers.find(x => x.id === id);
+      return c ? c.code : "N/A";
+    }
+
+    function updateSelects() {
+      const careerOpts = db.meta.careers.map(c => `<option value="${c.id}">${c.code} - ${c.name}</option>`).join("");
+      document.getElementById("enrollCareer").innerHTML = careerOpts;
+
+      const years = [1,2,3,4,5].map(y => `<option value="${y}">${y}</option>`).join("");
+      document.getElementById("enrollYear").innerHTML = years;
+
+      const filterCareer = document.getElementById("filterCareer");
+      filterCareer.innerHTML = `<option value="">Todas</option>${careerOpts}`;
+
+      const filterYear = document.getElementById("filterYear");
+      filterYear.innerHTML = `<option value="">Todos</option>${years}`;
+
+      const groups = [...new Set(db.schedule.map(s => s.group))].sort();
+      document.getElementById("filterGroup").innerHTML = `<option value="">Todos</option>${groups.map(g => `<option>${g}</option>`).join("")}`;
+    }
+
+    function updateKpis() {
+      document.getElementById("kpiCareers").textContent = db.meta.careers.length;
+      document.getElementById("kpiTeachers").textContent = db.teachers.length;
+      document.getElementById("kpiRooms").textContent = db.rooms.length;
+      document.getElementById("kpiAssign").textContent = db.schedule.length;
+    }
+
+    function avgRoomCapacity() {
+      if (!db.rooms.length) return 35;
+      return Math.round(db.rooms.reduce((a, r) => a + Number(r.capacity || 0), 0) / db.rooms.length);
+    }
+
+    function generateGroupsFromEnrollment() {
+      const avgCap = Math.max(10, avgRoomCapacity());
+      const groups = [];
+      const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+      db.enrollment.forEach(en => {
+        const career = db.meta.careers.find(c => c.id === en.careerId);
+        if (!career) return;
+        const needed = Math.max(1, Math.ceil(en.students / avgCap));
+        for (let i = 0; i < needed; i++) {
+          groups.push({
+            id: uid("group"),
+            careerId: en.careerId,
+            year: en.year,
+            size: Math.ceil(en.students / needed),
+            name: `${career.code}-${en.year}${letters[i] || `G${i+1}`}`
+          });
+        }
+      });
+
+      db.groups = groups;
+      logMessage(`Grupos generados automáticamente: ${groups.length} (capacidad promedio: ${avgCap}).`);
+    }
+
+    function parseCSV(input) {
+      const lines = input.split("\n").map(l => l.trim()).filter(Boolean);
+      if (!lines.length) return [];
+      const result = [];
+
+      for (const line of lines) {
+        const cols = line.split(",").map(c => c.trim());
+        if (cols.length < 6) continue;
+        const [clase, creditos, compartida, anio, categoria, tipo] = cols;
+        const c = {
+          id: uid("class"),
+          name: clase,
+          credits: Number(creditos) || 2,
+          shared: String(compartida).toLowerCase() === "si" || String(compartida).toLowerCase() === "true",
+          year: Number(anio),
+          category: categoria,
+          type: normalizeClassType(tipo),
+          blocks: blocksFromCredits(Number(creditos) || 2)
+        };
+        result.push(c);
+      }
+      return result;
+    }
+
+    function dayPriority(days) {
+      const order = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+      return [...days].sort((a,b) => order.indexOf(a) - order.indexOf(b));
+    }
+
+    function findTeacherForClass(clase, day, start, blocks, usedTeacherSlots) {
+      const areaKey = clase.category.toLowerCase();
+      const candidates = db.teachers.filter(t => t.areas.some(a => a.toLowerCase().includes(areaKey)));
+      const pool = candidates.length ? candidates : db.teachers;
+      for (const teacher of pool) {
+        let busy = false;
+        for (let b = start; b < start + blocks; b++) {
+          const key = `${day}|${b}|${teacher.id}`;
+          if (usedTeacherSlots.has(key)) { busy = true; break; }
+        }
+        if (!busy) return teacher;
+      }
+      return null;
+    }
+
+    function canAssign({groupName, groupSize, room, day, start, blocks, shift, groupDailyCount, usedGroupSlots, usedRoomSlots}) {
+      if (room.capacity < groupSize) return false;
+      for (let b = start; b < start + blocks; b++) {
+        if (b > shift.blocksPerDay) return false;
+        if (shift.breakBlock === b || shift.lunchBlock === b) return false;
+        if (usedGroupSlots.has(`${day}|${b}|${groupName}`)) return false;
+        if (usedRoomSlots.has(`${day}|${b}|${room.id}`)) return false;
+      }
+      if ((groupDailyCount[groupName]?.[day] || 0) + blocks > shift.maxDaily) return false;
+      return true;
+    }
+
+    function assignSlots(assignment, resources) {
+      const {day, startBlock, blocks, group, room, teacher} = assignment;
+      for (let b = startBlock; b < startBlock + blocks; b++) {
+        resources.usedGroupSlots.add(`${day}|${b}|${group.name}`);
+        resources.usedRoomSlots.add(`${day}|${b}|${room.id}`);
+        resources.usedTeacherSlots.add(`${day}|${b}|${teacher.id}`);
+      }
+      if (!resources.groupDailyCount[group.name]) resources.groupDailyCount[group.name] = {};
+      resources.groupDailyCount[group.name][day] = (resources.groupDailyCount[group.name][day] || 0) + blocks;
+    }
+
+    function generateSchedule() {
+      db.warnings = [];
+      db.schedule = [];
+
+      const shift = getCurrentShift();
+      if (!shift) {
+        logMessage("Debe guardar primero la configuración de turno.");
+        return;
+      }
+      if (!db.meta.careers.length || !db.rooms.length || !db.teachers.length || !db.classes.length || !db.enrollment.length) {
+        logMessage("Faltan datos obligatorios: carreras, aulas, docentes, clases o matrícula.");
+        return;
+      }
+
+      generateGroupsFromEnrollment();
+
+      const resources = {
+        usedTeacherSlots: new Set(),
+        usedRoomSlots: new Set(),
+        usedGroupSlots: new Set(),
+        groupDailyCount: {}
+      };
+
+      const days = dayPriority(shift.days);
+      const classesByYear = db.classes.reduce((acc, c) => {
+        (acc[c.year] ||= []).push(c);
+        return acc;
+      }, {});
+
+      const careers = [...db.meta.careers];
+      for (const career of careers) {
+        for (let year = 1; year <= 5; year++) {
+          const groups = db.groups.filter(g => g.careerId === career.id && g.year === year);
+          const yearClasses = classesByYear[year] || [];
+          if (!groups.length || !yearClasses.length) continue;
+
+          for (const group of groups) {
+            for (const clase of yearClasses) {
+              let assigned = false;
+              const validRooms = db.rooms.filter(r => r.type === clase.type && r.capacity >= group.size);
+              const roomPool = validRooms.length ? validRooms : db.rooms.filter(r => r.capacity >= group.size);
+
+              for (const day of days) {
+                if (assigned) break;
+                for (let start = 1; start <= shift.blocksPerDay; start++) {
+                  if (assigned) break;
+                  if (start + clase.blocks - 1 > shift.blocksPerDay) continue;
+
+                  for (const room of roomPool) {
+                    if (!canAssign({
+                      groupName: group.name,
+                      groupSize: group.size,
+                      room,
+                      day,
+                      start,
+                      blocks: clase.blocks,
+                      shift,
+                      groupDailyCount: resources.groupDailyCount,
+                      usedGroupSlots: resources.usedGroupSlots,
+                      usedRoomSlots: resources.usedRoomSlots
+                    })) continue;
+
+                    const teacher = findTeacherForClass(clase, day, start, clase.blocks, resources.usedTeacherSlots);
+                    if (!teacher) continue;
+
+                    const assignment = {
+                      id: uid("schedule"),
+                      careerId: career.id,
+                      career: career.name,
+                      year,
+                      group: group.name,
+                      classId: clase.id,
+                      class: clase.name,
+                      classType: clase.type,
+                      credits: clase.credits,
+                      docenteId: teacher.id,
+                      docente: teacher.name,
+                      aulaId: room.id,
+                      aula: room.name,
+                      day,
+                      blocks: Array.from({length: clase.blocks}, (_, i) => start + i),
+                      startBlock: start,
+                      endBlock: start + clase.blocks - 1
+                    };
+
+                    assignSlots({day, startBlock: start, blocks: clase.blocks, group, room, teacher}, resources);
+                    db.schedule.push(assignment);
+                    assigned = true;
+                    break;
+                  }
+                }
+              }
+
+              if (!assigned) {
+                db.warnings.push(`No se pudo asignar: ${career.code} Año ${year} Grupo ${group.name} - ${clase.name}`);
+              }
+            }
+          }
+        }
+      }
+
+      logMessage(`Horario generado: ${db.schedule.length} asignaciones. Advertencias: ${db.warnings.length}.`);
+      saveState();
+      renderAll();
+    }
+
+    function renderSchedule() {
+      const table = document.getElementById("scheduleTable");
+      const shift = getCurrentShift();
+      if (!shift) {
+        table.innerHTML = "<tr><td>Configure y guarde un turno para visualizar horario.</td></tr>";
+        return;
+      }
+
+      const careerFilter = document.getElementById("filterCareer").value;
+      const yearFilter = document.getElementById("filterYear").value;
+      const groupFilter = document.getElementById("filterGroup").value;
+
+      const items = db.schedule.filter(s => {
+        if (careerFilter && s.careerId !== careerFilter) return false;
+        if (yearFilter && String(s.year) !== String(yearFilter)) return false;
+        if (groupFilter && s.group !== groupFilter) return false;
+        return true;
+      });
+
+      let html = `<tr><th>Bloque</th>${shift.days.map(d => `<th>${d}</th>`).join("")}</tr>`;
+      for (let b = 1; b <= shift.blocksPerDay; b++) {
+        html += `<tr><td><strong>${b}</strong><br><span class="tiny">${blockLabel(shift, b)}</span></td>`;
+        for (const day of shift.days) {
+          const hits = items.filter(x => x.day === day && x.blocks.includes(b));
+          const cell = hits.map(h => `
+            <div class="entry" data-id="${h.id}">
+              <strong>${h.class}</strong>
+              <small>${h.group} · ${h.docente}</small>
+              <small>${h.aula} · ${h.startBlock}-${h.endBlock}</small>
+            </div>`).join("");
+          html += `<td>${cell}</td>`;
+        }
+        html += "</tr>";
+      }
+
+      table.innerHTML = html;
+      table.querySelectorAll(".entry").forEach(el => {
+        el.addEventListener("click", () => {
+          const id = el.dataset.id;
+          manualEdit(id);
+        });
+      });
+    }
+
+    function blockLabel(shift, block) {
+      const [h,m] = shift.startTime.split(":").map(Number);
+      const start = new Date(2000,0,1,h,m + (block-1)*shift.blockDuration);
+      const end = new Date(2000,0,1,h,m + block*shift.blockDuration);
+      const fmt = d => `${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`;
+      return `${fmt(start)}-${fmt(end)}`;
+    }
+
+    function manualEdit(id) {
+      const item = db.schedule.find(s => s.id === id);
+      if (!item) return;
+
+      const newDay = prompt(`Editar día para ${item.class} (${item.group})`, item.day);
+      if (!newDay) return;
+      const newStart = Number(prompt(`Editar bloque inicial`, item.startBlock));
+      if (!newStart || newStart < 1) return;
+
+      const shift = getCurrentShift();
+      if (!shift.days.includes(newDay)) {
+        alert("Día inválido según turno.");
+        return;
+      }
+
+      const room = db.rooms.find(r => r.id === item.aulaId);
+      const teacher = db.teachers.find(t => t.id === item.docenteId);
+      const groupSize = db.groups.find(g => g.name === item.group)?.size || 30;
+
+      const resources = rebuildUsedSlotsExcluding(item.id);
+      const ok = canAssign({
+        groupName: item.group,
+        groupSize,
+        room,
+        day: newDay,
+        start: newStart,
+        blocks: item.blocks.length,
+        shift,
+        groupDailyCount: resources.groupDailyCount,
+        usedGroupSlots: resources.usedGroupSlots,
+        usedRoomSlots: resources.usedRoomSlots
+      });
+
+      if (!ok) {
+        alert("No se puede mover por conflicto de restricciones.");
+        return;
+      }
+
+      for (let b = newStart; b < newStart + item.blocks.length; b++) {
+        if (resources.usedTeacherSlots.has(`${newDay}|${b}|${teacher.id}`)) {
+          alert("Conflicto de docente en ese bloque.");
+          return;
+        }
+      }
+
+      item.day = newDay;
+      item.startBlock = newStart;
+      item.endBlock = newStart + item.blocks.length - 1;
+      item.blocks = Array.from({length: item.blocks.length}, (_, i) => newStart + i);
+
+      saveState();
+      logMessage(`Asignación editada manualmente: ${item.class} ${item.group}.`);
+      renderAll();
+    }
+
+    function rebuildUsedSlotsExcluding(excludedId) {
+      const shift = getCurrentShift();
+      const resources = {
+        usedTeacherSlots: new Set(),
+        usedRoomSlots: new Set(),
+        usedGroupSlots: new Set(),
+        groupDailyCount: {}
+      };
+      db.schedule.forEach(s => {
+        if (s.id === excludedId) return;
+        const blocks = s.blocks || [];
+        blocks.forEach(b => {
+          resources.usedTeacherSlots.add(`${s.day}|${b}|${s.docenteId}`);
+          resources.usedRoomSlots.add(`${s.day}|${b}|${s.aulaId}`);
+          resources.usedGroupSlots.add(`${s.day}|${b}|${s.group}`);
+        });
+        if (!resources.groupDailyCount[s.group]) resources.groupDailyCount[s.group] = {};
+        resources.groupDailyCount[s.group][s.day] = (resources.groupDailyCount[s.group][s.day] || 0) + blocks.length;
+      });
+      return resources;
+    }
+
+    function renderAll() {
+      renderChips();
+      updateSelects();
+      renderSchedule();
+      renderWarnings();
+      updateKpis();
+    }
+
+    function hookEvents() {
+      document.getElementById("addCareerBtn").addEventListener("click", () => {
+        const coordName = document.getElementById("coordName").value.trim() || "Coordinación General";
+        const periodName = document.getElementById("periodName").value.trim() || "Periodo Activo";
+        const code = document.getElementById("careerCode").value.trim().toUpperCase();
+        const name = document.getElementById("careerName").value.trim();
+        if (!code || !name) return alert("Ingrese código y nombre de carrera.");
+
+        if (!db.meta.coordinations.find(c => c.name === coordName)) {
+          db.meta.coordinations.push({id: uid("coordination"), name: coordName});
+        }
+        if (!db.meta.periods.find(p => p.name === periodName)) {
+          db.meta.periods.push({id: uid("period"), name: periodName});
+        }
+
+        db.meta.careers.push({id: uid("career"), code, name});
+        saveState();
+        renderAll();
+        logMessage(`Carrera registrada: ${code} - ${name}.`);
+      });
+
+      document.getElementById("saveShiftBtn").addEventListener("click", () => {
+        const shift = {
+          id: uid("shift"),
+          name: document.getElementById("shiftName").value.trim() || "Diurno",
+          startTime: document.getElementById("startTime").value,
+          blockDuration: Number(document.getElementById("blockDuration").value) || 45,
+          blocksPerDay: Number(document.getElementById("blocksPerDay").value) || 10,
+          breakBlock: Number(document.getElementById("breakBlock").value) || 4,
+          lunchBlock: Number(document.getElementById("lunchBlock").value) || 7,
+          maxDaily: Number(document.getElementById("maxDaily").value) || 6,
+          days: document.getElementById("daysInput").value.split(",").map(d => d.trim()).filter(Boolean)
+        };
+        db.meta.shifts.push(shift);
+        saveState();
+        renderAll();
+        logMessage(`Turno guardado: ${shift.name}.`);
+      });
+
+      document.getElementById("addTeacherBtn").addEventListener("click", () => {
+        const name = document.getElementById("teacherName").value.trim();
+        const areas = document.getElementById("teacherAreas").value.split(",").map(a => a.trim()).filter(Boolean);
+        if (!name || !areas.length) return alert("Ingrese nombre y áreas para docente.");
+        db.teachers.push({id: uid("teacher"), name, areas});
+        saveState();
+        renderAll();
+        logMessage(`Docente agregado: ${name}.`);
+      });
+
+      document.getElementById("addRoomBtn").addEventListener("click", () => {
+        const name = document.getElementById("roomName").value.trim();
+        const type = document.getElementById("roomType").value;
+        const capacity = Number(document.getElementById("roomCapacity").value);
+        if (!name || !capacity) return alert("Complete los datos del aula.");
+        db.rooms.push({id: uid("room"), name, type, capacity});
+        saveState();
+        renderAll();
+        logMessage(`Aula agregada: ${name} (${type}, cap:${capacity}).`);
+      });
+
+      document.getElementById("addEnrollBtn").addEventListener("click", () => {
+        const careerId = document.getElementById("enrollCareer").value;
+        const year = Number(document.getElementById("enrollYear").value);
+        const students = Number(document.getElementById("enrollCount").value);
+        if (!careerId || !year || !students) return alert("Complete matrícula.");
+
+        const existing = db.enrollment.find(e => e.careerId === careerId && e.year === year);
+        if (existing) {
+          existing.students = students;
+          logMessage(`Matrícula actualizada: ${careerCodeById(careerId)} año ${year}.`);
+        } else {
+          db.enrollment.push({id: uid("enrollment"), careerId, year, students});
+          logMessage(`Matrícula registrada: ${careerCodeById(careerId)} año ${year}.`);
+        }
+        saveState();
+        renderAll();
+      });
+
+      document.getElementById("loadCsvBtn").addEventListener("click", () => {
+        const text = document.getElementById("csvInput").value.trim();
+        if (!text) return alert("Pegue contenido CSV.");
+        const loaded = parseCSV(text);
+        db.classes = db.classes.concat(loaded);
+        saveState();
+        renderAll();
+        logMessage(`Clases cargadas desde CSV: ${loaded.length}.`);
+      });
+
+      document.getElementById("loadSampleBtn").addEventListener("click", () => {
+        const sample = [
+          "Programación I,4,no,1,básica,laboratorio",
+          "Matemática I,4,no,1,básica,aula",
+          "Comunicación,2,si,1,general,aula",
+          "Estructuras de Datos,4,no,2,programación,laboratorio",
+          "Bases de Datos,3,no,2,programación,laboratorio",
+          "Arquitectura de Computadores,3,no,3,hardware,taller",
+          "Ingeniería de Software,4,no,3,programación,aula",
+          "Redes de Computadoras,4,no,4,redes,laboratorio",
+          "Inteligencia Artificial,4,no,5,programación,laboratorio"
+        ].join("\n");
+        document.getElementById("csvInput").value = sample;
+        logMessage("Ejemplo CSV cargado en editor.");
+      });
+
+      document.getElementById("generateBtn").addEventListener("click", generateSchedule);
+
+      document.getElementById("resetBtn").addEventListener("click", () => {
+        if (!confirm("¿Seguro que desea reiniciar el sistema completo?")) return;
+        db = initialState();
+        saveState();
+        document.getElementById("messages").textContent = "";
+        logMessage("Sistema reiniciado.");
+        renderAll();
+      });
+
+      ["filterCareer", "filterYear", "filterGroup"].forEach(id => {
+        document.getElementById(id).addEventListener("change", renderSchedule);
+      });
+    }
+
+    function bootstrap() {
+      hookEvents();
+      renderAll();
+      logMessage("Sistema listo.");
+    }
+
+    bootstrap();
+  </script>
+</body>
 </html>
